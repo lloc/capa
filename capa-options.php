@@ -1,6 +1,6 @@
 <?php
 
-load_plugin_textdomain( 'capa', false, dirname(plugin_basename(__FILE__)).'/lang' );
+load_plugin_textdomain( 'capa', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 
 add_action( 'admin_menu', 'capa_add_pages' );
 add_action( 'the_post', '_capa_filter_the_post' );
@@ -26,8 +26,20 @@ function capa_add_pages() {
 	global $menu;
 
 	// Add CaPa CSS Style
-	wp_enqueue_style( 'capa', plugins_url( $path = '/capa/css/capa-style.css' ), array() );
-	wp_enqueue_script( 'capa', plugins_url( $path = '/capa/js/capa.js' ), array() );
+	wp_enqueue_style(
+		'capa',
+		plugins_url(
+			$path = '/capa/css/capa-style.css'
+		),
+		array()
+	);
+	wp_enqueue_script(
+		'capa',
+		plugins_url(
+			$path = '/capa/js/capa.js'
+		),
+		array()
+	);
 
 	// DEV Variable
 	define( 'CAPA_DBUG', false );
@@ -54,10 +66,10 @@ function capa_add_pages() {
 	$page['help'] =	add_submenu_page( $menu_slug, __( 'CaPa &rsaquo; Support', 'capa' ), __( 'CaPa Support', 'capa' ), 'manage_options', 'capa/capa-support-page', 'capa_sublevel_support' );
 
 	// Add Help 
-	if (function_exists( 'add_contextual_help' )) {
-		add_contextual_help( $page['global'], '<br />' . @file_get_contents( WP_PLUGIN_DIR . "/capa/help/global." . ( ( '' == WPLANG ) ? 'EN' : ((file_exists(WP_PLUGIN_DIR."/capa/help/global.".strtoupper(substr(WPLANG,0,2)))) ? strtoupper(substr(WPLANG,0,2)) : 'EN' )), "r"));
-		add_contextual_help( $page['roles'],  '<br />' . @file_get_contents( WP_PLUGIN_DIR . "/capa/help/roles." . ( ( '' == WPLANG ) ? 'EN' : ((file_exists(WP_PLUGIN_DIR."/capa/help/roles.".strtoupper(substr(WPLANG,0,2)))) ? strtoupper(substr(WPLANG,0,2)) : 'EN' )), "r"));
-		add_contextual_help( $page['help'], '<br />' . @file_get_contents( WP_PLUGIN_DIR . "/capa/help/help." . ( ( '' == WPLANG ) ? 'EN' : ((file_exists(WP_PLUGIN_DIR."/capa/help/help.".strtoupper(substr(WPLANG,0,2)))) ? strtoupper(substr(WPLANG,0,2)) : 'EN' )), "r"));
+	if ( function_exists( 'add_contextual_help' ) ) {
+		add_contextual_help( $page['global'], '<br />' . @file_get_contents( WP_PLUGIN_DIR . '/capa/help/global.' . ( ( '' == WPLANG ) ? 'EN' : ( ( file_exists( WP_PLUGIN_DIR . '/capa/help/global.' . strtoupper( substr( WPLANG, 0, 2 ) ) ) ) ? strtoupper( substr( WPLANG, 0,2 ) ) : 'EN' ) ), 'r' ) );
+		add_contextual_help( $page['roles'],  '<br />' . @file_get_contents( WP_PLUGIN_DIR . '/capa/help/roles.' . ( ( '' == WPLANG ) ? 'EN' : ( ( file_exists( WP_PLUGIN_DIR . '/capa/help/roles.' . strtoupper( substr( WPLANG, 0, 2 ) ) ) ) ? strtoupper( substr( WPLANG, 0,2 ) ) : 'EN' ) ), 'r' ) );
+		add_contextual_help( $page['help'], '<br />' . @file_get_contents( WP_PLUGIN_DIR . '/capa/help/help.' . ( ( '' == WPLANG ) ? 'EN' : ( ( file_exists( WP_PLUGIN_DIR . '/capa/help/help.' . strtoupper( substr( WPLANG, 0, 2 ) ) ) ) ? strtoupper( substr( WPLANG, 0, 2 ) ) : 'EN' ) ), 'r' ) );
 	}
 }
 
@@ -74,7 +86,7 @@ function capa_global_page() {
 
 	echo '<h2 style="margin-bottom:15px;">';
 	_e( 'CaPa &raquo; General settings', 'capa' );
-	echo '<br><span class="description">';
+	echo '<br/><span class="description">';
 	_e( 'These settings define the display of the CaPa protected content on your blog.', 'capa' );
 	echo '</span></h2>';
 	echo '<form name="capa_protect" method="post">';
@@ -86,12 +98,12 @@ function capa_global_page() {
 					<td>
 						<label>
 							<input name="capa_protect_show_private_pages" type="checkbox" onClick="capa_enable_disable_form_elements()"' .
-								(get_option( 'capa_protect_show_private_pages' ) ? " checked" : "") .
+								(get_option( 'capa_protect_show_private_pages' ) ? ' checked="checked"' : '' ) .
 								'> ' . __( 'Show protected pages', 'capa' ) .'
 						</label>
-						<br>
+						<br/>
 						<span class="description" style="margin-left:10px;">'. __( 'Checking this option will show links to all the pages.', 'capa' ). '</span>
-						<br>
+						<br/>
 						<div style="margin-left:10px;">
 						</div>
 					</td>
@@ -102,16 +114,16 @@ function capa_global_page() {
 					<td>
 						<label>
 							<input name="capa_protect_show_private_categories" type="checkbox" onClick="capa_enable_disable_form_elements()"' .
-								(get_option( 'capa_protect_show_private_categories' ) ? " checked" : "") .
+								(get_option( 'capa_protect_show_private_categories' ) ? ' checked="checked"' : '' ) .
 								'> ' . __( 'Show private categories', 'capa' ) .'
 						</label>
-						<br>
+						<br/>
 						<span class="description" style="margin-left:10px;">'. __( 'Checking this option will show links to all the Categories.', 'capa' ). '</span>
 
-						<br>
+						<br/>
 						<label id="capa_protect_show_padlock_on_private_categories">
 							<input name="capa_protect_show_padlock_on_private_categories" type="checkbox" '.
-								(get_option( 'capa_protect_show_padlock_on_private_categories' ) ? " checked" : "" ) .
+								(get_option( 'capa_protect_show_padlock_on_private_categories' ) ? ' checked="checked"' : '' ) .
 								'> ' . __( 'Show a padlock icon next to private categories', 'capa' ) .'
 						</label>
 					</td>
@@ -119,7 +131,7 @@ function capa_global_page() {
 
 				<tr valign="top">
 					<th scope="row">' . __( 'Posts and pages display.', 'capa' ).'
-						<br>
+						<br/>
 						<span class="description">'. __( 'How do you want to display a protected post or page?', 'capa' ). '</span>
 					</th>
 					<td>
@@ -127,20 +139,20 @@ function capa_global_page() {
 							<input type="radio" name="capa_protect_post_policy" onClick="capa_enable_disable_form_elements()" value="hide" ' .
 								(get_option( 'capa_protect_post_policy' ) == 'hide' ||
 										get_option( 'capa_protect_post_policy' ) == false &&
-											get_option( 'capa_protect_show_private_message' ) == false ? ' checked' : '' ) .
+											get_option( 'capa_protect_show_private_message' ) == false ? ' checked="checked"' : '' ) .
 								'> '. __( 'Hide everything', 'capa' ) .'
 						</label>
-							<br>
+							<br/>
 						<label>
 							<input type="radio" name="capa_protect_post_policy" onClick="capa_enable_disable_form_elements()" value="show message"' .
 							(get_option( 'capa_protect_post_policy' ) == 'show message' ||
-									get_option( 'capa_protect_show_private_message' ) == true ? ' checked' : '' ) .
+									get_option( 'capa_protect_show_private_message' ) == true ? ' checked="checked"' : '' ) .
 							'> '. __( 'Show everything', 'capa' ) .'
 						</label>
-							<br>
+							<br/>
 						<label>
 							<input type="radio" name="capa_protect_post_policy" onClick="capa_enable_disable_form_elements()" value="show title"' .
-								(get_option( 'capa_protect_post_policy' ) == 'show title' ? ' checked' : '' ) .
+								(get_option( 'capa_protect_post_policy' ) == 'show title' ? ' checked="checked"' : '' ) .
 								'> '. __( 'Show title and the private message as content', 'capa' ) .'
 								
 						</label>
@@ -164,25 +176,25 @@ function capa_global_page() {
 						<label>
 							<input type="radio" name="capa_protect_comment_policy" onClick="capa_enable_disable_form_elements()" value="hide"' .
 							(get_option( 'capa_protect_comment_policy' ) == 'hide' ||
-									get_option( 'capa_protect_comment_policy' ) == false ? ' checked' : '' ) .
+									get_option( 'capa_protect_comment_policy' ) == false ? ' checked="checked"' : '' ) .
 								'> '. __( 'Hide all comments.', 'capa' ) .'
 						</label>
-							<br>
+							<br/>
 						<label>
 							<input type="radio" name="capa_protect_comment_policy" onClick="capa_enable_disable_form_elements()" value="show name"' .
-								(get_option( 'capa_protect_comment_policy' ) == 'show name' ? ' checked' : '' ) .
+								(get_option( 'capa_protect_comment_policy' ) == 'show name' ? ' checked="checked"' : '' ) .
 								'> '. __( 'Show Author, but the private message for the content.', 'capa' ) .'
 						</label>
-							<br>
+							<br/>
 						<label>
 							<input type="radio" name="capa_protect_comment_policy"	onClick="capa_enable_disable_form_elements()" value="show message"' .
-								(get_option( 'capa_protect_comment_policy' ) == 'show message' ? ' checked' : '' ) .
+								(get_option( 'capa_protect_comment_policy' ) == 'show message' ? ' checked="checked"' : '' ) .
 								'> '. __( 'Show content, but no author.', 'capa' ) .'
 						</label>
-							<br>
+							<br/>
 						<label>
 							<input type="radio" name="capa_protect_comment_policy" onClick="capa_enable_disable_form_elements()" value="all"' .
-								(get_option( 'capa_protect_comment_policy' ) == 'all' ? ' checked' : '' ) .
+								(get_option( 'capa_protect_comment_policy' ) == 'all' ? ' checked="checked"' : '' ) .
 								'> '. __( 'Show everything.', 'capa' ) .'
 						</label>
 
@@ -190,7 +202,7 @@ function capa_global_page() {
 
 						<label>
 							<input name="capa_protect_show_comment_on_private_posts" type="checkbox" value="1" '.
-								 (get_option( 'capa_protect_show_comment_on_private_posts' ) ? " checked" : "") .
+								 (get_option( 'capa_protect_show_comment_on_private_posts' ) ? ' checked="checked"' : '' ) .
 								 '> '. __( 'Use the Settings for comments from protected Posts.', 'capa' ) .'
 						</label>
 
@@ -201,15 +213,15 @@ function capa_global_page() {
 					<th scope="row">' . __( 'The Media Library', 'capa' ).'</th>
 					<td>
 						<label>
-							<input name="capa_protect_show_only_allowed_attachments" type="checkbox" onClick="capa_enable_disable_form_elements()" ' .(get_option( 'capa_protect_show_only_allowed_attachments' ) ? " checked" : "") .
+							<input name="capa_protect_show_only_allowed_attachments" type="checkbox" onClick="capa_enable_disable_form_elements()" ' .(get_option( 'capa_protect_show_only_allowed_attachments' ) ? ' checked="checked"' : '' ) .
 								'> ' . __( 'Show only allowed Attachments', 'capa' ) .'
 						</label>
-						<br>
+						<br/>
 						<span class="description" style="margin-left:10px;">'. __( 'Checking this option shows only attachments which were uploaded (not inserted) in posts from allowed categories', 'capa' ). '</span>
-						<br>
+						<br/>
 						<label id="capa_protect_show_unattached_files">
 							<input name="capa_protect_show_unattached_files" type="checkbox" '.
-								(get_option( 'capa_protect_show_unattached_files' ) ? " checked" : "" ) .
+								(get_option( 'capa_protect_show_unattached_files' ) ? ' checked="checked"' : '' ) .
 								'> ' . __( 'Show unattached files', 'capa' ) .'
 						</label>
 					</td>
@@ -220,9 +232,9 @@ function capa_global_page() {
 					<td>
 						<label>
 							<input type="checkbox" name="capa_protect_keep_options" value="on"' .
-								(get_option( 'capa_protect_keep_options' ) == '1' ? ' checked' : '' ) .
+								(get_option( 'capa_protect_keep_options' ) == '1' ? ' checked="checked"' : '' ) .
 								'> '. __( 'Keep CaPa Settings', 'capa' ) .'
-						</label><br>
+						</label><br/>
 						<span class="description" style="margin-left:10px;">'. __( 'In Case CaPa is disabled but you wanna keep the Settings.', 'capa' ). '</span>
 					</td>
 				</tr>
@@ -240,7 +252,6 @@ function capa_global_page() {
 
 // capa_sublevel_roles() displays the page content for the roles submenu
 function capa_sublevel_roles() {
-
 	// Check if POST isnt empty
 	( $_POST ) ? capa_handle_action() : null;
 
@@ -248,14 +259,20 @@ function capa_sublevel_roles() {
 		TODO wp_get_nav_menus( array( 'orderby' => 'name' ) ) Rights
 	*/
 	echo '<div class="wrap">';
-	
+
 	// For WP < 27 ???
 	echo (function_exists( 'screen_icon' )) ? screen_icon( 'users' ) : null;
-
 	echo '<h2 style="margin-bottom:15px;">' . __( 'CaPa &raquo; Users Roles', 'capa' ) . '</h2>';
 
-	$categorys = get_categories( array( 'sort_column' => 'menu_order', 'hide_empty' => 0, 'child_of' => 0, 'hierarchical' => 0 ) );
-	$pages     = get_pages( array( 'sort_column' => 'menu_order' ) );
+	$categorys = get_categories(
+		array(
+			'sort_column' => 'menu_order',
+			'hide_empty' => 0,
+			'child_of' => 0,
+			'hierarchical' => 0,
+		)
+	);
+	$pages = get_pages( array( 'sort_column' => 'menu_order' ) );
 
 	/**
 	 * Todo - Switch to a more performant solution
@@ -267,14 +284,18 @@ function capa_sublevel_roles() {
 		$category_check_role[$role]	= get_option( 'visitor' == $role ? 'capa_protect_cat_anonymous' : 'capa_protect_cat_role_' . $role );
 		$page_check_role[$role]	    = get_option( 'visitor' == $role ? 'capa_protect_pag_anonymous' : 'capa_protect_pag_role_' . $role );
 	}
-	
+
 	$odd[0] = '';
 	$odd[1] = ' class="alternate"';
 
 	echo '<ul class="subsubsub" style="float:none;">';
-	echo '<li><a href="#capa-scroll-category">'. _n( 'Category', 'Categories', count( $categorys ), 'capa' ) . '</a></li>';
+	echo '<li><a href="#capa-scroll-category">';
+	echo _n( 'Category', 'Categories', count( $categorys ), 'capa' );
+	echo '</a></li>';
 	echo '<li>&nbsp;|&nbsp;</li>';
-	echo '<li><a href="#capa-scroll-page">' . _n( 'Page', 'Pages', count($pages), 'capa' ).'</a></li>';
+	echo '<li><a href="#capa-scroll-page">';
+	echo _n( 'Page', 'Pages', count( $pages ), 'capa' );
+	echo '</a></li>';
 	echo '</ul>';
 	echo '<form name="capa_protect" method="post">';
 
@@ -289,17 +310,20 @@ function capa_sublevel_roles() {
 	_e( 'Select which categories are available for each user role.', 'capa' );
 	echo '</span></h2>';
 	echo '<table class="widefat fixed capa-table"><thead><tr><th>&nbsp;</th>';
-	foreach ( $roles as $name )
+	foreach ( $roles as $name ) {
 		echo "<th style=\"text-align:center;\">{$name}</th>";
+	}
 	echo '</tr></thead><tfoot><tr><th>';
 	_e( 'check/uncheck', 'capa' );
 	echo '</th>';
-	foreach ( array_keys( $roles ) as $role )
+	foreach ( array_keys( $roles ) as $role ) {
 		echo "<th><input type=\"checkbox\" id=\"check-cat-{$role}\" onclick=\"capa_check( 'capa_protect_cat[{$role}][]', 'check-cat-{$role}' );\"></th>";
+	}
 	echo '</tr></tfoot><tbody class="capa-tbody">';
+
 	foreach ( $categorys as $id => $cat ) {
 		$raw_order[$cat->term_id] = $id;
-		$search[$cat->term_id] = $cat->category_parent;
+		$search[$cat->term_id]    = $cat->category_parent;
 	}
 
 	// Get children-lvl
@@ -318,10 +342,11 @@ function capa_sublevel_roles() {
 	$i = 0;
 
 	foreach ( $sort_order as $key => $id ) {
-		echo '<tr style="text-align:center;" ' . $odd[($i%2)] . '>';
+		echo '<tr style="text-align:center;" ' . $odd[( $i % 2 )] . '>';
 		echo '<th><input type="hidden" id="empty-' . $categorys[$raw_order[$id]]->slug . '" name="empty" value="0" readonly><label onclick="capa_check_slug(\'' . $categorys[$raw_order[$id]]->slug . '-' . $categorys[$raw_order[$id]]->term_id . '\', \'empty-'.$categorys[$raw_order[$id]]->slug.'\' );">' . str_repeat( '<span style="color:#21759B;">&rsaquo;</span> ', $lvl['cat'][$categorys[$raw_order[$id]]->term_id] ) . $categorys[$raw_order[$id]]->cat_name . '</label></th>';
-		foreach ( array_keys( $roles ) as $role )
+		foreach ( array_keys( $roles ) as $role ) {
 			echo '<td><input class="category_id_role '.$categorys[$raw_order[$id]]->slug.'-'.$categorys[$raw_order[$id]]->term_id.'"  type="checkbox" name="capa_protect_cat[' . $role . '][]" value="'.$categorys[$raw_order[$id]]->term_id.'" ' . ( ( isset( $category_check_role[$role][$categorys[$raw_order[$id]]->term_id] ) ) ? 'checked' : null ) . '></td>';
+		}
 		echo '</tr>';
 		$i++;
 	}
@@ -333,66 +358,53 @@ function capa_sublevel_roles() {
 
 	if ( $pages ) {
 		echo '<a name="capa-scroll-page"></a>';
-		echo '<h2 style="margin-bottom:15px;">' . _n( 'Page visibility', 'Pages visibility', count($pages), 'capa' ) . '<br><span class="description">'. __( 'Select which pages are available for each user role.', 'capa' ). '</span></h2>';
+		echo '<h2 style="margin-bottom:15px;">';
+		echo _n( 'Page visibility', 'Pages visibility', count( $pages ), 'capa' );
+		echo '<br/><span class="description">';
+		_e( 'Select which pages are available for each user role.', 'capa' );
+		echo '</span></h2>';
 
-		echo '
-			<table class="widefat fixed capa-table">
-				<thead>
-					<tr>
-						<th>&nbsp;</th>';
-	foreach ( $roles as $name ) {
-		echo '
-						<th style="text-align:center;">' . $name . '</th>';
-	}
-	echo '
-					</tr>
-				</thead>
-				<tfoot>
-					<tr>
-						<th> '. __( 'check/uncheck', 'capa' ) .' </th>';
-	foreach ( array_keys( $roles ) as $role ) {
-		echo '
-						<th> <input type="checkbox" id="check-pag-' . $role . '" onclick="capa_check(\'capa_protect_pag[' . $role . '][]\',\'check-pag-' . $role . '\' );"> </th>';
-	}
-	echo '
-					</tr>
-				</tfoot>
-				<tbody class="capa-tbody">';
-		$i = 0;
+		echo '<table class="widefat fixed capa-table"><thead><tr><th>&nbsp;</th>';
+		foreach ( $roles as $name ) {
+			echo "<th style=\"text-align:center;\">{$name}</th>";
+		}
+		echo '</tr></thead><tfoot><tr><th>';
+		_e( 'check/uncheck', 'capa' );
+		echo '</th>';
+		foreach ( array_keys( $roles ) as $role ) {
+			echo "<th><input type=\"checkbox\" id=\"check-pag-{$role}\" onclick=\"capa_check( 'capa_protect_pag[{$role}][]', 'check-pag-{$role}' );\"></th>";
+		}
+		echo '</tr></tfoot><tbody class="capa-tbody">';
 
-		foreach ( $pages as $id=>$page ) {
+		foreach ( $pages as $id => $page ) {
 			$search[$page->ID]      = $page->post_parent;
-			$lvl['page'][$page->ID] = capa_find_lvl($page->ID,$search);
+			$lvl['page'][$page->ID] = capa_find_lvl( $page->ID, $search );
 		}
 
+		$i = 0;
 		foreach ( $pages as $page ) {
-			echo '
-					<tr style="text-align:center;" '.$odd[($i%2)].'>';
-			echo '
-						<th><input type="hidden" id="empty-'.$page->post_name.'" name="empty" value="0" readonly><label onclick="capa_check_slug(\''.$page->post_name.'-'.$page->ID.'\',\'empty-'.$page->post_name.'\' );">'. str_repeat( '<span style="color:#21759B;">&rsaquo;</span> ', $lvl['page'][$page->ID] ). $page->post_title .'</label></th>';
+			echo '<tr style="text-align:center;" ' . $odd[( $i % 2 )] . '>';
+			echo "<th><input type=\"hidden\" id=\"empty-{$page->post_name}\" name=\"empty\" value=\"0\" readonly=\"readonly\"/>";
+			echo "<label onclick=\"capa_check_slug('{$page->post_name}-{$page->ID}', 'empty-{$page->post_name}' );\">";
+			echo str_repeat( '<span style="color:#21759B;">&rsaquo;</span> ', $lvl['page'][$page->ID] ) . $page->post_title;
+			echo '</label></th>';
 			foreach ( array_keys( $roles ) as $role ) {
-				echo '
-						<td><input class="page_id_role '.$page->post_name.'-'.$page->ID.'" type="checkbox" name="capa_protect_pag[' . $role . '][]" value="'.$page->ID.'" '.((isset($page_check_role[$role][$page->ID])) ? 'checked' : null).'></td>';
+				echo "<td><input class=\"page_id_role {$page->post_name}-{$page->ID}\" type=\"checkbox\" name=\"capa_protect_pag[{$role}][]\" value=\"{$page->ID}\"" . ( isset( $page_check_role[$role][$page->ID] ) ? 'checked="checked"' : '' ) . '></td>';
 			}
-			echo '
-					</tr>';
+			echo '</tr>';
 			$i++;
 		}
-		echo '
-				</tbody>
-			</table>
-			';
+		echo '</tbody></table>';
 	}
-	echo '
-			<br/>';
-	echo '
-			<p class="submit" style="float:left; margin-right:10px;">
-				<button type="submit" name="submit" class="button-primary" value="Update Role Options" >'. __( 'Update user roles settings', 'capa' ) .'</button> 
-			</p>
-			<p class="submit">
-				<button type="submit" name="submit" class="button" value="reset role options" >'. __( 'Reset user roles', 'capa' ).'</button>
-			</p>
-		</form>';
+	echo '<br/>';
+	echo '<p class="submit" style="float:left; margin-right:10px;">';
+	echo '<button type="submit" name="submit" class="button-primary" value="Update Role Options" >';
+	_e( 'Update user roles settings', 'capa' );
+	echo '</button></p>';
+	echo '<p class="submit"><button type="submit" name="submit" class="button" value="reset role options" >';
+	_e( 'Reset user roles', 'capa' );
+	echo '</button></p>';
+	echo '</form>';
 }
 
 // capa_subleve_debug() displays information for an better help
@@ -410,39 +422,46 @@ function capa_sublevel_support() {
 
 	$all_plugins    = get_plugins();
 	$active_plugins = array();
-	$categorys      = get_categories( array( 'sort_column' => 'menu_order', 'hide_empty' => 0, 'child_of' => 0, 'hierarchical' => 0 ) );
-	$pages          = & get_pages( array( 'sort_column' => 'menu_order' ) );
 
+	$categorys = get_categories(
+		array(
+			'sort_column' => 'menu_order',
+			'hide_empty' => 0,
+			'child_of' => 0,
+			'hierarchical' => 0,
+		)
+	);
+	$pages = get_pages( array( 'sort_column' => 'menu_order' ) );
 	foreach ( $categorys as $cat ) {
 		$lvl['cat'][$cat->category_parent][] = $cat->term_id;
 	}
-	$lvl['cat'] = serialize($lvl['cat'] );
+	$lvl['cat'] = serialize( $lvl['cat'] );
 
-	foreach ( $pages as $id=>$pag ) {
+	foreach ( $pages as $id => $pag ) {
 		$lvl['pag'][$pag->post_parent][] = $pag->ID;
 	}
-	$lvl['pag'] = serialize($lvl['pag'] );
+	$lvl['pag'] = serialize( $lvl['pag'] );
 
 	foreach ( ( array ) $all_plugins as $plugin_file => $plugin_data ) {
 		//Translate, Apply Markup, Sanitize HTML
-		$plugin_data = _get_plugin_data_markup_translate($plugin_file, $plugin_data, false, true );
-		$all_plugins[ $plugin_file ] = $plugin_data;
+		$plugin_data = _get_plugin_data_markup_translate( $plugin_file, $plugin_data, false, true );
+		$all_plugins[$plugin_file] = $plugin_data;
 
 		//Filter into individual sections
 		if ( is_plugin_active( $plugin_file ) )
 			$active_plugins[ $plugin_file ] = $plugin_data;
-
 	}
+
 	echo '<form name="capa_protect" method="post">';
 	echo '<table class="form-table capa-form-table"><tr valign="top"><th scope="row" style="font-size:11px;">';
-	echo '<b>'. __( '@Active Plugins', 'capa' ).'</b><br>' . __( 'To avoid Problems between CaPa and others Plugins. All active plugins will be displayed.', 'capa' );
-	echo '<br><br>';
-	echo '<b>'. __( '@Serialize Categories ID&#39;s', 'capa' ).'</b><br>' . __( 'Serialize Categories contains only the Categories ID&#39;s in menu order', 'capa' );
-	echo '<br><br>';
-	echo '<b>'. __( '@Serialize Pages ID&#39;s', 'capa' ).'</b><br>' . __( 'Serialize Pages contains only the Pages ID&#39;s in menu order', 'capa' );
-	echo '<br><br>';
-	echo '<b>'. __( '@CaPa Settings', 'capa' ).'</b><br>' . __( 'All CaPa Settings', 'capa' );
-	echo '<br><br>';
+	echo '<b>'. __( '@Active Plugins', 'capa' ).'</b><br/>' . __( 'To avoid Problems between CaPa and others Plugins. All active plugins will be displayed.', 'capa' );
+	echo '<br/><br/>';
+	echo '<b>'. __( '@Serialize Categories ID&#39;s', 'capa' ).'</b><br/>' . __( 'Serialize Categories contains only the Categories ID&#39;s in menu order', 'capa' );
+	echo '<br/><br/>';
+	echo '<b>'. __( '@Serialize Pages ID&#39;s', 'capa' ).'</b><br/>' . __( 'Serialize Pages contains only the Pages ID&#39;s in menu order', 'capa' );
+	echo '<br/><br/>';
+	echo '<b>'. __( '@CaPa Settings', 'capa' ).'</b><br/>' . __( 'All CaPa Settings', 'capa' );
+	echo '<br/><br/>';
 	echo	__( 'In the case you don&#39;t want send all Information, just remove the part&#39;s.', 'capa' );
 	echo '</th><td><textarea class="large-text code" rows="20" name="information">';
 	echo __( '@Wordpress', 'capa' )."\n\n";
@@ -452,27 +471,27 @@ function capa_sublevel_support() {
 	echo __( '@Active Plugins', 'capa' )."\n\n";
 
 	$i = 1;
-	foreach($active_plugins as $plugin){
-		echo '['.$i.'] '.$plugin['Name']." (".$plugin['Version'].")\n".$plugin['PluginURI']."\n\n";
+	foreach ( $active_plugins as $plugin ) {
+		echo '['.$i.'] ' . $plugin['Name'] . ' (' . $plugin['Version'] . ")\n" . $plugin['PluginURI'] . "\n\n";
 		$i++;
 	}
 	echo "\n";
 
-	echo __( '@Serialize Categories ID&#39;s', 'capa' )."\n\n";
+	echo __( '@Serialize Categories ID&#39;s', 'capa' ) . "\n\n";
 	echo $lvl['cat'];
 	echo "\n\n\n";
-	echo __( '@Serialize Pages ID&#39;s', 'capa' )."\n\n";
+	echo __( '@Serialize Pages ID&#39;s', 'capa' ) . "\n\n";
 	echo $lvl['pag'];
 	echo "\n\n\n";
-	echo __( '@CaPa Settings', 'capa' )."\n\n";
+	echo __( '@CaPa Settings', 'capa' ) . "\n\n";
 
 	global $wpdb;
 
 	$_capa_settings = $wpdb->get_results( "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'capa%'" );
 
-	foreach($_capa_settings as $setting){
-		echo $setting->option_name.":\n '";
-		echo $setting->option_value."'\n\n";
+	foreach ( $_capa_settings as $setting ) {
+		echo $setting->option_name . ":\n '";
+		echo $setting->option_value . "'\n\n";
 	}
 	echo '</textarea></td></tr><tr><th style="font-size:11px;">';
 	echo '<b>' . __( 'Title', 'capa' ).'</b>';
@@ -503,8 +522,8 @@ function capa_handle_action() {
 
 		delete_option( 'capa_protect_show_title_in_feeds' );
 
-		delete_option( "capa_protect_comment_policy" );
-		delete_option( "capa_protect_show_comment_on_private_posts" );
+		delete_option( 'capa_protect_comment_policy' );
+		delete_option( 'capa_protect_show_comment_on_private_posts' );
 
 		delete_option( 'capa_protect_show_private_categories' );
 		delete_option( 'capa_protect_show_padlock_on_private_categories' );
@@ -515,7 +534,7 @@ function capa_handle_action() {
 
 		delete_option( 'capa_protect_keep_options' );
 
-		delete_option( "capa_protect_advance_policy" );
+		delete_option( 'capa_protect_advance_policy' );
 
 		// Show Update Message
 		echo '<div id="message" class="updated fade"><p><strong>';
@@ -667,10 +686,10 @@ function capa_handle_action() {
 		if ( isset( $_POST['capa_protect_pag_anonymous'] ) && is_array( $_POST['capa_protect_pag_anonymous'] ) ) {
 			foreach ( $_POST['capa_protect_pag_anonymous'] as $id => $value )
 				$tmp['capa_protect_pag_anonymous'][$value] = true;
-			update_option( 'capa_protect_pag_anonymous',$tmp['capa_protect_pag_anonymous'] );
+			update_option( 'capa_protect_pag_anonymous', $tmp['capa_protect_pag_anonymous'] );
 		}
 		else {
-			delete_option("capa_protect_pag_anonymous");
+			delete_option( 'capa_protect_pag_anonymous' );
 		}
 
 		if ( isset( $_POST['capa_protect_show_padlock_on_private_posts'] ) && $_POST['capa_protect_show_padlock_on_private_posts'] == 'on' )
@@ -708,7 +727,7 @@ function capa_handle_action() {
 	*/
 }
 
-function capa_find_lvl($id,$array){
+function capa_find_lvl( $id, $array ) {
 	$lvl = -1;
 	while ( $id != 0 ) {
 		foreach ( $array as $key => $value ) {
