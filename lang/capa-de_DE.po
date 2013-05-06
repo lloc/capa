@@ -1,0 +1,475 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: CaPa Protect\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-06-01 09:17+0100\n"
+"PO-Revision-Date: 2011-06-01 09:33+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: /Users/sascha/Sites/wp/plugins/capa/trunk\n"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:37
+msgid "CaPa"
+msgstr ""
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:40
+msgid "CaPa &rsaquo; General Settings"
+msgstr "CaPa &rsaquo; Allgemeine Einstellungen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:40
+msgid "CaPa Settings"
+msgstr "CaPa Einstellung"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:43
+msgid "CaPa &rsaquo; User Roles"
+msgstr "CaPa &rsaquo; Rollen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:43
+msgid "User Roles"
+msgstr "Rollen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:46
+msgid "CaPa &rsaquo; Support"
+msgstr "CaPa &raquo; Support"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:46
+msgid "CaPa Support"
+msgstr "CaPa Support"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:73
+msgid "CaPa &raquo; General settings"
+msgstr "CaPa &raquo; Allgemeine Einstellungen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:73
+msgid "These settings define the display of the CaPa protected content on your blog."
+msgstr "Diese Einstellung definieren die Darstellung von CaPa gesch&uuml;tzten Inhalt in Ihrem Blog."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:82
+msgid "Page display"
+msgstr "Seiten Darstellung"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:87
+msgid "Show protected pages"
+msgstr "Zeige gesch&uuml;tzte Seiten"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:90
+msgid "Checking this option will show links to all the pages."
+msgstr "Bei Aktivierung dieser Option werden die Links zu allen Seiten gezeigt."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:98
+msgid "The Category List"
+msgstr "Kategorien"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:103
+msgid "Show private categories"
+msgstr "Zeige gesch&uuml;tzte Kategorien"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:106
+msgid "Checking this option will show links to all the Categories."
+msgstr "Bei Aktivierung dieser Option werden die Links zu allen Kategorien gezeigt."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:112
+msgid "Show a padlock icon next to private categories"
+msgstr "Zeige ein Schloss Symbol neben gesch&uuml;tzten Kategorie Namen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:118
+msgid "Posts and pages display."
+msgstr "Beitr&auml;ge und Seiten Darstellung"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:120
+msgid "How do you want to display a protected post or page?"
+msgstr "Wie m&ouml;chten Sie die gesch&uuml;tzten Beitr&auml;ge und Seiten zeigen?"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:128
+msgid "Hide everything"
+msgstr "Verstecke alles"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:135
+msgid "Show everything"
+msgstr "Zeige alles"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:141
+msgid "Show title and the private message as content"
+msgstr "Zeige Title und eine private Nachricht f&uuml;r den Inhalt"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:147
+msgid "The private message"
+msgstr "Private Nachricht"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:157
+msgid "The Comments"
+msgstr "Kommentare"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:159
+msgid "Public &amp; Allowed Comments"
+msgstr "Ungesch&uuml;tzte &amp; Erlaubte Kommentare"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:165
+msgid "Hide all comments."
+msgstr "Verstecke alle Kommentare"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:171
+msgid "Show Author, but the private message for the content."
+msgstr "Zeige Autor, aber eine private Nachricht f&uuml;r den Inhalt."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:177
+msgid "Show content, but no author."
+msgstr "Zeige Inhalt, aber keinen Autor Namen."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:183
+msgid "Show everything."
+msgstr "Zeige alles"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:186
+msgid "Private Comments"
+msgstr "Gesch&uuml;tzte Kommentare"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:191
+msgid "Use the Settings for comments from protected Posts."
+msgstr "Benutze die selben Einstellungen f&uuml;r Kommentare von gesch&uuml;tzten Beitr&auml;ge."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:198
+msgid "The Media Library"
+msgstr "Die Mediathek"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:202
+msgid "Show only allowed Attachments"
+msgstr "Zeige nur erlaubte Anh&auml;nge"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:205
+msgid "Checking this option shows only attachments which were uploaded (not inserted) in posts from allowed categories"
+msgstr "Bei Aktivierung dieser Option werden nur Anh&auml;nge von erlaubten Kategorien gezeigt."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:210
+msgid "Show unattached files"
+msgstr "Zeige Dateien ohne Beitrag/Kategorie Zugeh&ouml;rigkeit"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:216
+msgid "Miscellaneous"
+msgstr "Verschiedenes"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:221
+msgid "Keep CaPa Settings"
+msgstr "Behalte CaPa Einstellung"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:223
+msgid "In Case CaPa is disabled but you wanna keep the Settings."
+msgstr "Beh&auml;lt die Einstellung, wenn CaPa deaktiviert ist."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:231
+msgid "Update general settings"
+msgstr "&Auml;nderungen &uuml;bernehmen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:234
+msgid "Reset defaults"
+msgstr "Einstellung zur&uuml;cksetzen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:264
+msgid "CaPa &raquo; Users Roles"
+msgstr "CaPa &raquo; Rollen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:286
+msgid "Category"
+msgid_plural "Categories"
+msgstr[0] "Kategorie"
+msgstr[1] "Kategorien"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:287
+msgid "Page"
+msgid_plural "Pages"
+msgstr[0] "Seite"
+msgstr[1] "Seiten"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:299
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-user-edit.php:102
+msgid "Category visibility"
+msgid_plural "Categories visibility"
+msgstr[0] "Kategorie"
+msgstr[1] "Kategorien"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:299
+msgid "Select which categories are available for each user role."
+msgstr "Markiere f&uuml;r jede Rolle die sichtbaren Kategorien."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:306
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:388
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:460
+msgid "Administrator"
+msgstr "Administrator"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:307
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:389
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:461
+msgid "Editor"
+msgstr "Redakteur"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:308
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:390
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:462
+msgid "Author"
+msgstr "Autor"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:309
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:391
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:463
+msgid "Contributor"
+msgstr "Mitarbeiter"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:310
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:392
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:464
+msgid "Subscriber"
+msgstr "Abonnent"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:311
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:393
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:465
+msgid "Visitor"
+msgstr "Besucher"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:317
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:399
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:471
+msgid "check/uncheck"
+msgstr ""
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:381
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-user-edit.php:103
+msgid "Page visibility"
+msgid_plural "Pages visibility"
+msgstr[0] "Seite"
+msgstr[1] "Seiten"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:381
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:453
+msgid "Select which pages are available for each user role."
+msgstr "W&auml;hle aus, welche Seiten sichtbar ist f&uuml;r jede Rolle "
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:453
+msgid "Redirect"
+msgid_plural "Redirects"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:519
+msgid "Update user roles settings"
+msgstr "&Auml;nderungen &uuml;bernehmen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:522
+msgid "Reset user roles"
+msgstr "Benutzer Einstellungen zur&uuml;cksetzen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:535
+msgid "CaPa &raquo; CaPa Support"
+msgstr "CaPa &raquo; CaPa Support"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:537
+msgid "Information to provide a faster way to help you."
+msgstr "Information um eine schnelle Hilfe zu erm&ouml;glichen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:538
+msgid "Information will be send per e-mail. A Copy goes to the Sender E-Mail."
+msgstr "Die Information wird per E-Mail versendet. Eine Kopie wird an die E-Mail Adresse des Versenders geschickt."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:574
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:592
+msgid "@Active Plugins"
+msgstr "@Aktive Plugins"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:574
+msgid "To avoid Problems between CaPa and others Plugins. All active plugins will be displayed."
+msgstr "Um Probleme zwischen CaPa und anderen Plugins zu verhindern werden alle aktiven Plugins angezeigt."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:576
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:601
+msgid "@Serialize Categories ID&#39;s"
+msgstr "@Serialisierte Kategorie ID&#39;s"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:576
+msgid "Serialize Categories contains only the Categories ID&#39;s in menu order"
+msgstr "Serialisierte Kategorien enthalten nur die Kategorien ID&#39;s in Menu Reihenfolge "
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:578
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:604
+msgid "@Serialize Pages ID&#39;s"
+msgstr "@Serialisierte Seiten ID&#39;s"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:578
+msgid "Serialize Pages contains only the Pages ID&#39;s in menu order"
+msgstr "Serialisierte Seiten enthalten nur die Seiten ID&#39;s in Menu Reihenfolge "
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:580
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:608
+msgid "@CaPa Settings"
+msgstr "@CaPa Einstellung"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:580
+msgid "All CaPa Settings"
+msgstr "Alle CaPa Einstellungen"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:582
+msgid "In the case you don&#39;t want send all Information, just remove the part&#39;s."
+msgstr "Im Falle Sie m&ouml;chten nicht alle Informationen senden, l&ouml;schen Sie die nicht gewollten Informationen."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:587
+msgid "@Wordpress"
+msgstr ""
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:589
+msgid "Version:"
+msgstr ""
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:590
+msgid "PHP Version:"
+msgstr ""
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:625
+msgid "Title"
+msgstr "Titel"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:630
+msgid "You can change the Title as you wish."
+msgstr "Sie k&ouml;nnen den Titel nach Ihrer Vorstellung &auml;ndern."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:636
+msgid "Sender"
+msgstr "Versender E-Mail"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:641
+msgid "You can change the Sender E-Mail."
+msgstr "Sie k&ouml;nnen die E-Mail zum Versenden &auml;ndern."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:646
+msgid "Comment (Optional)"
+msgstr "Kommentar (Optional)"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:657
+msgid "Send Help"
+msgstr "Hilfe Abschicken"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:691
+msgid "Global Settings are reset."
+msgstr "Globale Einstellung sind zur&uuml;ckgesetzt"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:708
+msgid "Role Settings are reset."
+msgstr "Rollen Einstellung wurden zur&uuml;ckgesetzt."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:799
+msgid "Global Settings saved."
+msgstr "Globale Einstellung gespeichert."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:847
+msgid "Role Settings saved."
+msgstr "Rollen Einstellung gesichert."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:881
+msgid "User Settings saved."
+msgstr "Benutzer Einstellung gesichert"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:902
+msgid "Message sent."
+msgstr "Nachricht versendet."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-options.php:905
+msgid "Message wasn&#39;t sent. Please try again or send by yourself."
+msgstr "Nachrich wurde nicht geschickt. Bitte probieren Sie es sp&auml;ter nochmals oder schicken Sie die E-Mail selber."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-user-edit.php:49
+msgid "CaPa &raquo; User Settings"
+msgstr "CaPa &raquo; Benutzer Einstellung"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-user-edit.php:49
+msgid "Here you can set categories and pages only for this users."
+msgstr "Hier geben Sie an welche Kategorien &amp; Seiten nur für diesen Benutzer sichtbar sind."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-user-edit.php:56
+msgid "Access"
+msgstr "Zugriff"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-user-edit.php:57
+msgid "As a manager, this user see all categories &amp; pages."
+msgstr "Als ein Manager, dieser Benutzer sieht alle Kategorien &amp; Seiten."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-user-edit.php:111
+msgid "check/uncheck all Categories"
+msgstr ""
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-user-edit.php:116
+msgid "check/uncheck all Pages"
+msgstr ""
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa-user-edit.php:175
+msgid "Reset current CaPa user settings"
+msgstr "Capa Benutzer Einstellung zur&uuml;cksetzen."
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa.php:21
+msgid "Sorry, you do not have sufficient privileges to view this post."
+msgstr "Sie haben nicht das Recht, diesen Beitrag zu lesen!"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa.php:33
+msgid "Unknown"
+msgstr "Unbekannter Author"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa.php:625
+msgid "No Title"
+msgstr "Kein Titel"
+
+#: /Users/sascha/Sites/wp/plugins/capa/trunk/capa.php:1174
+msgid "Other Help"
+msgstr "Andere Hilfe"
+
+#~ msgid "User Settings are reset."
+#~ msgstr "Benutzer Einstellung wurden zur&uuml;ckgesetzt."
+
+#~ msgid "CaPa &rsaquo; Visitors"
+#~ msgstr "CaPa &rsaquo; Besucher"
+
+#~ msgid "CaPa &raquo; Visitors"
+#~ msgstr "CaPa &raquo; Besucher"
+
+#~ msgid ""
+#~ "Here you can set which categories and pages will be visible to the users "
+#~ "that are not logged in."
+#~ msgstr ""
+#~ "Hier geben Sie an welchen Kategorien &amp; Seiten sichtbar sind für nicht "
+#~ "angemeldete Besucher."
+
+#~ msgid "Update visitors settings"
+#~ msgstr "&Auml;nderungen &uuml;bernehmen"
+
+#~ msgid "Reset visitors"
+#~ msgstr "Einstellungen zur&uuml;cksetzen"
+
+#~ msgid "CaPa &rsaquo; Anonymous Users"
+#~ msgstr "CaPa &rsaquo; Anonymer Benutzer"
+
+#~ msgid "Anonymous User"
+#~ msgstr "Anonymer Benutzer"
+
+#~ msgid "Help"
+#~ msgstr "Hilfe"
+
+#~ msgid "Protected Posts in the Blog"
+#~ msgstr "Schutz f&uuml;r die Beitr&auml;ge"
+
+#~ msgid "Hide entire post."
+#~ msgstr "Verstecke Beitrag"
+
+#~ msgid "Show title and content."
+#~ msgstr "Zeige Titel &amp; Inhalt"
+
+#~ msgid "Update Global Options"
+#~ msgstr "&Auml;nderungen &uuml;bernehmen"
+
+#~ msgid "Reset Global Options"
+#~ msgstr "Allgemeine Einstellungen zur&uuml;cksetzen"
