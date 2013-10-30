@@ -1,7 +1,5 @@
 <?php
 
-load_plugin_textdomain('capa', false, dirname(plugin_basename(__FILE__)).'/lang' );
-
 if (!class_exists("capa_protect_user_edit")) {
 
 	class capa_protect_user_edit {
@@ -195,6 +193,3 @@ if (!class_exists("capa_protect_user_edit")) {
 
 add_action('edit_user_profile',			array('capa_protect_user_edit','print_html'));
 add_action('edit_user_profile_update',	array('capa_protect_user_edit','update'));
-#add_action('init',						array('capa_protect_user_edit','update'));
-
-?>

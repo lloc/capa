@@ -1,14 +1,12 @@
 <?php
 /*
-Plugin Name: CaPa Protect
-Plugin URI: http://www.smatern.de/category/coding/capa/
-Description: CaPa provides Category & Pages protection on a roles & user basis.
-Version: 0.5.8.2
-Author: S. Matern
-Author URI: http://www.smatern.de
+Plugin Name: CaPa Protect Reloaded
+Plugin URI: https://github.com/lloc/capa
+Description: CaPa Protect Reloaded provides protection for categories & pages on a roles & user basis. The plugin based on the work by S. Matern (http://www.smatern.de/category/coding/capa/).
+Version: 0.1
+Author: realloc, S. Matern
+Author URI: http://lloc.de/
 */
-
-load_plugin_textdomain('capa', false, dirname(plugin_basename(__FILE__)).'/lang');
 
 include_once('capa-options.php');
 include_once('capa-user-edit.php');
@@ -41,7 +39,59 @@ $access_cat_default		= get_option("capa_protect_cat_default");
 $wpc_all_page_ids		= get_all_page_ids();
 $wpc_siteurl 			= get_option('siteurl');
 
-class capa_protect {
+class Capa_Protect {
+
+	public static function init() {
+		$obj = new self();
+		// --------------------------------------------------------------------
+		// FILTERS
+		// --------------------------------------------------------------------
+
+		//---- Diff Filters --//
+		add_filter( 'query',					array( $obj, 'filter_wpdb_query' ), 10);
+
+		add_filter( 'wp_get_object_terms',		array( $obj, 'filter_object_item' ), 10, 3 );
+		add_filter( 'wp_list_pages_excludes',	array( $obj, 'filter_page_list_item' ), 10 );
+		add_filter( 'wp_list_categories',		array( $obj, 'filter_category_list_item' ), 10 );
+
+		//---- FRONTEND & BACKEND ----//
+
+		// BACKEND
+		add_filter( 'contextual_help',			array( $obj, 'cleanup_capa_help' ), 10 );
+		add_filter( 'get_pages',				array( $obj, 'filter_pages' ), 10 );
+
+		if ( is_admin() ) {
+			add_filter('list_terms_exclusions',	array( $obj, 'sql_terms_exclusions' ), 10 );
+		}
+
+		// FRONTEND & BACKEND
+		add_filter( 'get_term',					array( $obj, 'filter_terms' ), 10, 2 );
+		add_filter( 'get_terms',				array( $obj, 'filter_terms' ), 10 );
+		add_filter( 'posts_where',				array( $obj, 'filter_posts' ), 10 );
+		add_filter( 'wp_get_nav_menu_items',	array( $obj, 'filter_menu_list_item' ), 10 );
+
+		//---- POST FILTERS ----//
+		add_filter( 'the_content',				array( $obj, 'filter_content' ), 10 );
+		add_filter( 'the_title',				array( $obj, 'filter_post_title' ) , 10, 2 );
+
+		add_filter( 'get_previous_post_where',	array( $obj, 'filter_posts' ), 10 );
+		add_filter( 'get_next_post_where', 		array( $obj, 'filter_posts' ), 10 );
+		add_filter( 'getarchives_where',		array( $obj, 'filter_posts' ), 10 );
+
+		//---- COMMENT FILTERS ----//
+		add_filter( 'comment_feed_where',		array( $obj, 'filter_comment_feed' ), 10 );
+		add_filter( 'comments_array',			array( $obj, 'filter_comment' ), 10, 2 );
+
+		add_filter( 'get_comments_number',		array( $obj, 'filter_comment' ), 10 );
+		add_filter( 'the_comments',				array( $obj, 'filter_comment' ), 10 );
+
+		add_filter( 'comment_author',			array( $obj, 'filter_comment_author' ), 10 );
+		add_filter( 'get_comment_author',		array( $obj, 'filter_comment_author' ), 10 );
+		add_filter( 'get_comment_author_link',	array( $obj, 'filter_comment_author' ), 10 );
+
+		add_filter( 'comment_text',				array( $obj, 'filter_comment_body' ), 10 );
+		add_filter( 'get_comment_excerpt',		array( $obj, 'filter_comment_body' ), 10 );
+	}
 
 	function dev_info($params1,$params2=false,$params3=false){
 		var_dump($params1);
@@ -121,7 +171,6 @@ class capa_protect {
 	 * @return string
 	 */
 	function filter_category_list_item($text,$category = null){
-
 		global $capa_protect_show_private_categories, $capa_protect_show_padlock_on_private_categories;
 		global $current_user, $wpc_siteurl, $wp_version;
 
@@ -129,10 +178,9 @@ class capa_protect {
 			return $text;
 		}
 
-		$all_category_ids = capa_protect::_get_taxonomy_ids();
-			$all_category_ids = $all_category_ids['category'];
+		$all_category_ids = $this->get_taxonomy_ids( 'category' );
 
-	# Make the changes
+		# Make the changes
 		$site_root = parse_url($wpc_siteurl);
 		$site_root = trailingslashit($site_root['path']);
 
@@ -547,7 +595,8 @@ class capa_protect {
 		$inclusive		= capa_protect::get_value_categories(TRUE);
 		$inclusive_page	= capa_protect::get_valid_pages();
 
-		(sizeof($inclusive) <= 0) ? $inclusive = array(0) : $inclusive = $inclusive;
+		if ( sizeof( $inclusive) <= 0 )
+			$inclusive = array(0);
 
 		$query = " SELECT ID FROM $wpdb->posts INNER JOIN" .
 			" $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id )" .
@@ -854,13 +903,13 @@ class capa_protect {
 	 *
 	 * @return array
 	 */	
-	function filter_pages($params){
+	function filter_pages( $params ) {
 		global $capa_protect_show_private_pages;
 
-		if($capa_protect_show_private_pages)
+		if ( $capa_protect_show_private_pages )
 			return $params;
 
-		foreach($params as $id=>$page){
+		foreach ( $params as $id => $page ) {
 			if(capa_protect::post_should_be_hidden($page->ID)){
 				unset($params[$id]);
 			}
@@ -874,20 +923,14 @@ class capa_protect {
 	 * get the allows/disallow ( depends on modus ) categories
 	 *
 	 * @uses current_user
-	 *
-	 * @uses capa_protect::_get_taxonomy_ids()
-	 * @uses capa_protect::get_capa_protect_for_user()
-	 *
 	 * @param bool $moduls
 	 * @param string $typ
-	 *
 	 * @return array
 	 */
-	function get_value_categories($modus=TRUE, $typ='taxo', $inclusions=array(0), $capa_all_category_ids = array()) {
+	function get_value_categories( $modus = true, $typ = 'taxo', $inclusions = array( 0 ), $capa_all_category_ids = array() ) {
 		global $current_user;
 
-		$all_category_tax_ids = capa_protect::_get_taxonomy_ids();
-		$all_category_tax_ids = (isset($all_category_tax_ids['category'])) ? array_flip($all_category_tax_ids['category']) : array();
+		$all_category_tax_ids = array_flip( $this->get_taxonomy_ids( 'category' ) );
 
 		if ($current_user && isset($current_user->allcaps['manage_categories']) && !isset($current_user->caps['editor'])){
 			return $all_category_tax_ids;
@@ -1180,33 +1223,29 @@ class capa_protect {
 		return preg_replace($search_string, '', $params);
 	}
 	
-	// --------------------------------------------------------------------
-	/**
-		CaPa INTERN FUNCTIONS
-	**/
-	// --------------------------------------------------------------------
-
-
 	/**
 	 * Create an Array with term_id and term_taxonomy_id ( prevent mix up with term/taxonomy IDs )
 	 *
 	 * @uses $wpdb
-	 *
+	 * @param array $taxonomy_ids
 	 * @return array
 	 */
-	function _get_taxonomy_ids($taxonomy_ids = array()){
+	protected function get_taxonomy_ids( $taxonomy, $taxonomy_ids = array() ) {
 		global $wpdb;
 
-			$query = " SELECT term_id,term_taxonomy_id,taxonomy FROM $wpdb->term_taxonomy ";
-			$res = mysql_query($query) or die(mysql_error());
-
-				while ($row = mysql_fetch_assoc($res)){
-					$taxonomy_ids[$row['taxonomy']][$row['term_taxonomy_id']] = $row['term_id'];
-				}
-
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT term_id, term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE taxonomy = %s",
+				esc_sql( $taxonomy )
+			)
+		);
+		if ( $results ) {
+			foreach ( $results as $row ){
+				$taxonomy_ids[$row->term_taxonomy_id] = $row->term_id;
+			}
+		}
 		return $taxonomy_ids;
 	}
-
 
 	/**
 	 * Add SQL Addition to show only comments of allow post
@@ -1220,7 +1259,7 @@ class capa_protect {
 		global $capa_protect_comment_policy;
 
 		// In the Case comments are hidden
-			if($capa_protect_comment_policy == 'hide' || $capa_protect_comment_policy === FALSE){
+			if($capa_protect_comment_policy == 'hide' || $capa_protect_comment_policy === false ){
 				return ' WHERE comment_post_ID IN (0)';
 			}
 
@@ -1349,81 +1388,6 @@ class capa_protect {
 			}
 
 		global $wpdb, $capa_protect_comment_policy;
-
-	// Code fuer WP < 3
-		if( (int) $GLOBALS['wp_version'] != '3'){
-
-			// SQLFILTER::function _wp_get_comment_list
-			#	FROM $wpdb->comments USE INDEX (comment_date_gmt) WHERE
-				if(strpos($param, "FROM $wpdb->comments USE INDEX (comment_date_gmt) WHERE") !== FALSE){
-
-					if(strpos($param,'WHERE') !== FALSE && strpos(substr($param, strpos($param,'WHERE')),'comment_post_ID') === FALSE){
-					// In Case Public/Allowed Comments are hidden 
-						if($capa_protect_comment_policy == 'hide'){
-							$allow_posts = ' comment_post_ID IN (0) AND';
-						}else{
-							$allow_posts = capa_protect::filter_posts();
-							$allow_posts = str_replace('AND ID',' comment_post_ID',$allow_posts)." AND";
-						}
-
-						$param = str_replace('WHERE', 'WHERE'.$allow_posts, $param);
-
-						return $param;
-					}
-				}
-
-			// SQLFILTER::function wp_count_terms
-			#	SELECT COUNT(*) 
-			#	FROM $wpdb->term_taxonomy WHERE taxonomy = %s
-				if(strpos($param, "SELECT COUNT(*) FROM $wpdb->term_taxonomy WHERE taxonomy") !== FALSE){
-					$taxo = substr($param, strpos($param, 'taxonomy =')+12, -2);
-
-					switch($taxo){
-						case 'category':
-							if(strpos($param,'term_taxonomy_id') === FALSE){
-								$disallow_cat = capa_protect::get_value_categories(FALSE);
-								$param .= ' AND term_taxonomy_id NOT IN ('.implode(',',$disallow_cat).')';
-							}
-						break;
-
-						case 'post_tag':
-							if(strpos($param,'term_taxonomy_id') === FALSE){
-								$allow_tags	= capa_protect::get_value_tags();
-								$param .= ' AND term_taxonomy_id IN ('.implode(',',$allow_tags).') ';
-							}
-						break;
-					}
-
-
-					return $param;
-
-				}
-
-
-			// SQLFILTER::function wp_dashboard_recent_comments
-			// Code von WP < 3
-			#	SELECT * 
-			#	FROM $wpdb->comments 
-			#	ORDER BY comment_date_gmt DESC LIMIT $start, 50
-				if(strpos($param, "SELECT * FROM $wpdb->comments ORDER BY comment_date_gmt DESC LIMIT") !== FALSE){
-
-					if(strpos($param,'ORDER') !== FALSE && strpos(substr($param, strpos($param,'WHERE')),'comment_post_ID') === FALSE){
-					// In Case Public/Allowed Comments are hidden 
-						if($capa_protect_comment_policy == 'hide'){
-							$allow_posts = ' comment_post_ID IN (0)';
-						}else{
-							$allow_posts = capa_protect::filter_posts();
-							$allow_posts = str_replace('AND ID',' comment_post_ID',$allow_posts);
-						}
-
-						$param = str_replace('ORDER', 'WHERE '.$allow_posts.' ORDER', $param);
-					}
-
-					return $param;
-				}
-
-		}
-
 
 
 	// SQLFILTER::function _wp_get_comment_list
@@ -1575,113 +1539,39 @@ class capa_protect {
 
 }
 
-function init_capa(){
-// Standard Settings
-	update_option('capa_protect_show_only_allowed_attachments',	TRUE);
+/**
+ * Load translation
+ */
+function capa_plugin_init() {
+	load_plugin_textdomain(
+		'capa',
+		false,
+		dirname( plugin_basename(__FILE__) ) . '/lang/'
+	);
+	Capa_Protect::init();
 }
+add_action( 'plugins_loaded', 'capa_plugin_init' );
 
-// Clean Up Option DB
-function unset_capa_protect_options(){
-	if(!get_option('capa_protect_keep_options')){
-		global $wpdb;
-
-		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'capa_protect%'" );
-	}
+/**
+ * Callback function for activation hook
+ * @todo Set option tp true if there exits no option with the key 'capa_protect_show_only_allowed_attachments'
+ */
+function capa_activation() {
+	update_option( 'capa_protect_show_only_allowed_attachments', true );
 }
+register_activation_hook( __FILE__, 'capa_activation' );
 
-register_activation_hook(__FILE__, 'init_capa');
-register_deactivation_hook(__FILE__, 'unset_capa_protect_options');
-
-
-// --------------------------------------------------------------------
-// DEV Fn & FILTERS
-// --------------------------------------------------------------------
-
-#	add_filter('role_has_cap',		array('capa_protect','dev_has'),10);
-
-// any use for this?
-	#add_filter('query', array('capa_protect','dev_info'));
-
-#add_action('init', 'init_capa');
-
-// Tags filtern - noetig?
-#add_filter('the_tags',	array('capa_protect','dev_info'));
-
-// Categorien ?
-#do_action_ref_array('pre_get_posts', array(&$this));
-
-
-// --------------------------------------------------------------------
-// Deprecate & old & unknown FILTERS
-// --------------------------------------------------------------------
-
-	// Deprecated - replaced with 'list_terms_exclusions'
-	##add_action('save_post',					array('capa_protect','verify_category'), 10);
-
-
-	// Andere Loesung finden
-	// Hm, vergessen wofuer das war ...
-	###
-	##	add_filter('role_has_cap',				array('capa_protect','filter_role_has_cap'),10,2);
-	##	add_filter('user_has_cap',				array('capa_protect','filter_user_has_cap'),10,3);
-
-	#	add_filter('the_tags',					array('capa-protect','filter_terms'),10);
-
-	// Diese Funktion gibt ein html string. 
-	// Dies zu schuetzen durch abfrage der categorie namen ist unsicher
-	//	add_filter('the_category',				array('capa_protect','filter_category'),10);
-
-	#		add_filter('get_comment',				array('capa_protect','filter_get_com'),10);
-
-
-
-// --------------------------------------------------------------------
-// FILTERS
-// --------------------------------------------------------------------
-
-//---- Diff Filters --//
-add_filter('query',	array('capa_protect','filter_wpdb_query'),10);
-
-	add_filter('wp_get_object_terms',		array('capa_protect','filter_object_item'),10,3);
-	add_filter('wp_list_pages_excludes',	array('capa_protect','filter_page_list_item'),10);
-	add_filter('wp_list_categories',		array('capa_protect','filter_category_list_item'),10);
-
-//---- FRONTEND & BACKEND ----// 
-
-	// BACKEND
-		add_filter('contextual_help',		array('capa_protect','cleanup_capa_help'),10);
-		add_filter('get_pages',				array('capa_protect','filter_pages'),10);
-
-		if(strpos($_SERVER['REQUEST_URI'], '/wp-admin/')){
-			add_filter('list_terms_exclusions',		array('capa_protect','sql_terms_exclusions'),10);
-		}
-
-	// FRONTEND & BACKEND
-		add_filter('get_term',					array('capa_protect','filter_terms'),10,2);
-		add_filter('get_terms',					array('capa_protect','filter_terms'),10);
-		add_filter('posts_where',				array('capa_protect','filter_posts'),10);
-		add_filter('wp_get_nav_menu_items',		array('capa_protect','filter_menu_list_item'),10);	
-
-
-//---- POST FILTERS ----//
-	add_filter('the_content',				array('capa_protect','filter_content'),10);
-	add_filter('the_title',					array('capa_protect','filter_post_title'),10,2);
-
-		add_filter('get_previous_post_where',	array('capa_protect','filter_posts'),10);
-		add_filter('get_next_post_where', 		array('capa_protect','filter_posts'),10);
-		add_filter('getarchives_where',			array('capa_protect','filter_posts'),10);
-
-//---- COMMENT FILTERS ----//
-	add_filter('comment_feed_where',		array('capa_protect','filter_comment_feed'),10);
-	add_filter('comments_array',				array('capa_protect','filter_comment'),10,2);
-		add_filter('get_comments_number',		array('capa_protect','filter_comment'),10);
-		add_filter('the_comments',				array('capa_protect','filter_comment'),10);
-
-		add_filter('comment_author',			array('capa_protect','filter_comment_author'),10);
-		add_filter('get_comment_author',		array('capa_protect','filter_comment_author'),10);
-		add_filter('get_comment_author_link',	array('capa_protect','filter_comment_author'),10);
-
-		add_filter('comment_text',				array('capa_protect','filter_comment_body'),10);
-		add_filter('get_comment_excerpt',		array('capa_protect','filter_comment_body'),10);
-
-?>
+/**
+ * Callback function for uninstall hook
+ * - cleanup options if not protected
+ */
+function capa_uninstall(){
+	global $wpdb;
+	$wpdb->query(
+		$wpdb->prepare(
+			"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+			'capa_protect%'
+		)
+	);
+}
+register_uninstall_hook( __FILE__, 'capa_uninstall' );

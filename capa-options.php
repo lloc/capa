@@ -1,13 +1,9 @@
 <?php
 
-load_plugin_textdomain( 'capa', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
-
-add_action( 'admin_menu', 'capa_add_pages' );
-add_action( 'the_post', '_capa_filter_the_post' );
-
 function _capa_filter_the_post( $param ) {
 	return capa_protect::_admin_the_post_parent( $param );
 }
+add_action( 'the_post', '_capa_filter_the_post' );
 
 function capa_get_roles( $admin = false ) {
 	global $wp_roles;
@@ -72,6 +68,7 @@ function capa_add_pages() {
 		add_contextual_help( $page['help'], '<br />' . @file_get_contents( WP_PLUGIN_DIR . '/capa/help/help.' . ( ( '' == WPLANG ) ? 'EN' : ( ( file_exists( WP_PLUGIN_DIR . '/capa/help/help.' . strtoupper( substr( WPLANG, 0, 2 ) ) ) ) ? strtoupper( substr( WPLANG, 0, 2 ) ) : 'EN' ) ), 'r' ) );
 	}
 }
+add_action( 'admin_menu', 'capa_add_pages' );
 
 // capa_global_page() displays the page content for the custom Capa Toplevel menu
 function capa_global_page() {
@@ -227,17 +224,6 @@ function capa_global_page() {
 					</td>
 				</tr>
 
-				<tr>
-					<th scope="row">' .__( 'Miscellaneous', 'capa' ). '</th>
-					<td>
-						<label>
-							<input type="checkbox" name="capa_protect_keep_options" value="on"' .
-								(get_option( 'capa_protect_keep_options' ) == '1' ? ' checked="checked"' : '' ) .
-								'> '. __( 'Keep CaPa Settings', 'capa' ) .'
-						</label><br/>
-						<span class="description" style="margin-left:10px;">'. __( 'In Case CaPa is disabled but you wanna keep the Settings.', 'capa' ). '</span>
-					</td>
-				</tr>
 			</table>
 			<p class="submit" style="float:left; margin-right:10px;">
 				<button type="submit" name="submit" class="button-primary" value="Update general settings" >'. __( 'Update general settings', 'capa' ) .'</button> 

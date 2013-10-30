@@ -1,10 +1,10 @@
 #adminmenu #toplevel_page_capa-capa-options div.wp-menu-image {
-background: transparent url('../img/capa.png') no-repeat scroll -1px -33px;
+	background: transparent url('../img/capa.png') no-repeat scroll -1px -33px;
 }
 #adminmenu #toplevel_page_capa-capa-options:hover div.wp-menu-image,
 #adminmenu #toplevel_page_capa-capa-options.wp-has-current-submenu div.wp-menu-image,
 #adminmenu #toplevel_page_capa-capa-options.current div.wp-menu-image {
-background: transparent url('../img/capa.png') no-repeat scroll -1px -1px;
+	background: transparent url('../img/capa.png') no-repeat scroll -1px -1px;
 }
 
 .capa-sent, .capa-done{
@@ -21,14 +21,16 @@ background: transparent url('../img/capa.png') no-repeat scroll -1px -1px;
 }
 
 .capa-table label{
-	display:	block;
+	display: block;
 }
 .capa-form-table h4{
 	margin-bottom:	0px;
 }
-	.capa-form-table input[type="text"], 
-	.capa-form-table #capa_protect_show_padlock_on_private_categories input[type="checkbox"],
-	.capa-form-table #capa_protect_show_unattached_files input[type="checkbox"] { margin-left:10px; }
+.capa-form-table input[type="text"], 
+.capa-form-table #capa_protect_show_padlock_on_private_categories input[type="checkbox"],
+.capa-form-table #capa_protect_show_unattached_files input[type="checkbox"] {
+	margin-left:10px;
+}
 
 .capa-table thead th{
 	text-align:	center;
