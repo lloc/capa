@@ -54,11 +54,12 @@ if (!class_exists("capa_protect_user_edit")) {
 				echo '<h3>'. __('Access','capa') .' &amp; </h3>';
 				echo '<p class="desc">'. __('As a manager, this user see all categories &amp; pages.','capa').'</p>';
 
-			}else{
-					echo '<div class="wrap">';
-						echo '<form name="capa_protect" method="post">';
+			}
+			else{
+				echo '<div class="wrap">';
+				echo '<form name="capa_protect" method="post">';
 
-							$categorys	= & get_categories( array('sort_column' => 'menu_order','hide_empty'=>0, 'child_of'=>0, 'hierarchical'=>0) );
+				$categorys	= & get_categories( array('sort_column' => 'menu_order','hide_empty'=>0, 'child_of'=>0, 'hierarchical'=>0) );
 							$pages		= & get_pages( array('sort_column' => 'menu_order') );
 
 							// -- @BEGINN CATEGORIE ORDER --

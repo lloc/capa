@@ -1,5 +1,36 @@
 <?php
 
+class Capa_Protect_Options_Handler {
+
+	protected $arr;
+
+	public static function getInstance() {
+        static $instance;
+        if ( null === $instance ) {
+			$instance = new self();
+        }
+		return $instance;
+	}
+
+    private function __clone() {}
+    private function __wakeup() {}
+
+    private function __construct() {
+    	$this->arr = array(
+    		'capa_protect_default_comment_author'  => __( 'Unknown', 'capa' ),
+    		'capa_protect_default_private_message' => __( 'Sorry, you do not have sufficient privileges to view this post.', 'capa' ),
+    	);
+    	 
+    }
+
+    public function __get( $key ) {
+		if ( ! isset( $this->arr[$key] ) )
+			$this->arr[$key] = get_option( $key );
+		return $this->arr[$key];
+	}
+
+}
+
 function _capa_filter_the_post( $param ) {
 	return capa_protect::_admin_the_post_parent( $param );
 }
@@ -16,7 +47,7 @@ function capa_get_roles( $admin = false ) {
 
 function capa_add_pages() {
 	// Rolle/User -> no manage options right -> No go 
-	if ( !current_user_can( 'manage_options' ) )
+	if ( ! current_user_can( 'manage_options' ) )
 		return null;
 
 	global $menu;
