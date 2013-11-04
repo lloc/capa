@@ -30,49 +30,49 @@ class Capa_Protect {
 		static $instance;
 		if ( null === $instance ) {
 			$instance = new self();
-		
+
 			//---- Diff Filters --//
 			add_filter( 'query',					array( $instance, 'filter_wpdb_query' ), 10);
-	
+
 			add_filter( 'wp_get_object_terms',		array( $instance, 'filter_object_item' ), 10, 3 );
 			add_filter( 'wp_list_pages_excludes',	array( $instance, 'filter_page_list_item' ), 10 );
 			add_filter( 'wp_list_categories',		array( $instance, 'filter_category_list_item' ), 10 );
-	
+
 			//---- FRONTEND & BACKEND ----//
-	
+
 			// BACKEND
 			add_filter( 'contextual_help',			array( $instance, 'cleanup_capa_help' ), 10 );
 			add_filter( 'get_pages',				array( $instance, 'filter_pages' ), 10 );
-	
+
 			if ( is_admin() ) {
 				add_filter('list_terms_exclusions',	array( $instance, 'sql_terms_exclusions' ), 10 );
 			}
-	
+
 			// FRONTEND & BACKEND
 			add_filter( 'get_term',					array( $instance, 'filter_terms' ), 10, 2 );
 			add_filter( 'get_terms',				array( $instance, 'filter_terms' ), 10 );
 			add_filter( 'posts_where',				array( $instance, 'filter_posts' ), 10 );
 			add_filter( 'wp_get_nav_menu_items',	array( $instance, 'filter_menu_list_item' ), 10 );
-	
+
 			//---- POST FILTERS ----//
 			add_filter( 'the_content',				array( $instance, 'filter_content' ), 10 );
 			add_filter( 'the_title',				array( $instance, 'filter_post_title' ) , 10, 2 );
-	
+
 			add_filter( 'get_previous_post_where',	array( $instance, 'filter_posts' ), 10 );
 			add_filter( 'get_next_post_where', 		array( $instance, 'filter_posts' ), 10 );
 			add_filter( 'getarchives_where',		array( $instance, 'filter_posts' ), 10 );
-	
+
 			//---- COMMENT FILTERS ----//
 			add_filter( 'comment_feed_where',		array( $instance, 'filter_comment_feed' ), 10 );
 			add_filter( 'comments_array',			array( $instance, 'filter_comment' ), 10, 2 );
-	
+
 			add_filter( 'get_comments_number',		array( $instance, 'filter_comment' ), 10 );
 			add_filter( 'the_comments',				array( $instance, 'filter_comment' ), 10 );
-	
+
 			add_filter( 'comment_author',			array( $instance, 'filter_comment_author' ), 10 );
 			add_filter( 'get_comment_author',		array( $instance, 'filter_comment_author' ), 10 );
 			add_filter( 'get_comment_author_link',	array( $instance, 'filter_comment_author' ), 10 );
-	
+
 			add_filter( 'comment_text',				array( $instance, 'filter_comment_body' ), 10 );
 			add_filter( 'get_comment_excerpt',		array( $instance, 'filter_comment_body' ), 10 );
 		}
@@ -83,7 +83,7 @@ class Capa_Protect {
 		if ( $editor && isset( $this->user->caps['editor'] ) )
 			return false;
 		return(
-			$this->user && 
+			$this->user &&
 			isset( $this->user->allcaps['manage_categories'] )
 		);
 	}
@@ -155,7 +155,7 @@ class Capa_Protect {
 				}
 				// In the case user see all categories but padlock is active
 				// $search will be empty
-				if ( count( $search ) > 0 ) 
+				if ( count( $search ) > 0 )
 					return preg_replace( $search, $replace, $text );
 			}
 		}
@@ -193,7 +193,7 @@ class Capa_Protect {
 		}
 
 		// If the DB contains no data all pages will be excluded
-		$excludes_page = get_all_page_ids();  
+		$excludes_page = get_all_page_ids();
 		if ( is_array( $user_access_page_check ) ) {
 			$tmp['all_pages'] = $excludes_page;
 			foreach ( $user_access_page_check as $check => $id ) {
@@ -237,7 +237,7 @@ class Capa_Protect {
 
 			case 'page':
 			default:
-			
+
 				// CATEGORY
 					if ($this->options->capa_protect_post_policy != 'hide'){
 					// Page
@@ -310,16 +310,16 @@ class Capa_Protect {
 				if ( empty( $user_access_page_check ) ) {
 					$user_access_page_check	= $this->options->capa_protect_pag_default;
 				}
-	
+
 				if ( isset( $user_access_page_check[$val_id] ) ) {
 					return true;
 				}
 				else {
 					return false;
 				}
-	
+
 				$user_access_pag_check = "";
-				break 1;	
+				break 1;
 
 		case 'cat':
 		case 'category':
@@ -405,7 +405,7 @@ class Capa_Protect {
 		if ( empty( $visible ) ) {
 			$visible = get_option( 'capa_protect_cat_role_' . implode( '', $current_user->roles ) );
 			if( empty( $visible ) ) {
-				$visible = $this->option->capa_protect_cat_default;	
+				$visible = $this->option->capa_protect_cat_default;
 			}
 		}
 		return $visible;
@@ -416,12 +416,12 @@ class Capa_Protect {
 	 * Sets users capa settings
 	 * @param string $user_id
 	 * @param array $value
-	 * @param string $kind 
+	 * @param string $kind
 	 *
 	 * @return none
 	 */
 	function set_access_for_user($user_id, $value, $kind) {
-	
+
 		switch($kind) {
 			case "cat":
 				if ($value){
@@ -456,7 +456,7 @@ class Capa_Protect {
 
 		// Is Feed or User/Visitor got the right to see the titel / message
 		if (
-			( is_feed() && $this->options->capa_protect_post_policy != 'hide' && $this->options->capa_protect_post_policy ) || 
+			( is_feed() && $this->options->capa_protect_post_policy != 'hide' && $this->options->capa_protect_post_policy ) ||
 			( $this->options->capa_protect_post_policy == 'show title' || $this->options->capa_protect_post_policy == 'show message' )
 		) {
 		// Only Frontend, Backend(wp-admin) no visual change
@@ -488,7 +488,7 @@ class Capa_Protect {
 
 	# Array Post Check ~ Include already the ID of Pages?
 		if(is_array($inclusive_page) && sizeof($inclusive_page) > 0){
-			$tmp_count = count($inclusive_page)-1;	
+			$tmp_count = count($inclusive_page)-1;
 
 			for($i=0;$i<=$tmp_count;$i++){
 				$tmp_var = "'".$inclusive_page[$i]."'";
@@ -551,7 +551,7 @@ class Capa_Protect {
 		global $post;
 
 		if (
-			false !== $this->options->capa_protect_post_policy && 
+			false !== $this->options->capa_protect_post_policy &&
 			'show title' == $this->options->capa_protect_post_policy &&
 			$this->post_should_be_hidden( $post->ID )
 		) {
@@ -583,7 +583,7 @@ class Capa_Protect {
 		// params ist ein array, einzelne comment abfrage
 		// hoere Performens abfrage?
 		// SQL Query und Cache kontrollieren
-		
+
 		// Post ID exists?
 		if ( (int) $postID > 0){
 			if ( $this->post_should_be_hidden( $post_id ) ) {
@@ -700,7 +700,7 @@ class Capa_Protect {
 	 * To show or not to show the page
 	 * @param array $param
 	 * @return array
-	 */	
+	 */
 	function filter_pages( $params ) {
 		$params = (array) $params;
 		if ( $this->options->capa_protect_show_private_pages )
@@ -794,11 +794,11 @@ class Capa_Protect {
 
 		$sql	= '
 			SELECT '.$wpdb->term_relationships.'.object_id, '.$wpdb->term_relationships.'.term_taxonomy_id
-			FROM '.$wpdb->term_relationships.' 
-			WHERE 
-				'.$wpdb->term_relationships.'.object_id IN ( 
+			FROM '.$wpdb->term_relationships.'
+			WHERE
+				'.$wpdb->term_relationships.'.object_id IN (
 					SELECT '.$wpdb->term_relationships.'.object_id
-					FROM '.$wpdb->term_relationships.' 
+					FROM '.$wpdb->term_relationships.'
 					WHERE '.$wpdb->term_relationships.'.term_taxonomy_id '.$where_in.' )
 				'.$where_not.'
 			GROUP BY '.$wpdb->term_relationships.'.term_taxonomy_id';
@@ -851,7 +851,7 @@ class Capa_Protect {
 	*/
 	function verify_category($post_ID) {
 		global $wpdb;
-	
+
 		$postcats = $wpdb->get_col("SELECT term_taxonomy_id FROM $wpdb->term_relationships WHERE object_id = $post_ID ORDER BY term_taxonomy_id");
 		$exclusions = $this->get_value_categories(FALSE);
 
@@ -877,7 +877,7 @@ class Capa_Protect {
 			$count = count($category);
 
 			for($e=0;$e<=$count;$e++){
-				if ( !$this->user_can_access( $category[$e]['cat_ID'], 'cat' ) ) {	
+				if ( !$this->user_can_access( $category[$e]['cat_ID'], 'cat' ) ) {
 					if ( count( $category[$e]['children'] ) > 0 ) {
 						$count_children = count($category[$e]['children']);
 						for($f=0;$f<=$count_children;$f++){
@@ -890,7 +890,7 @@ class Capa_Protect {
 									array_push($category,$tmp_main);
 								}
 							}
-						}					
+						}
 					}
 					unset($category[$e]);
 				}
@@ -971,7 +971,7 @@ class Capa_Protect {
 		// Remove Other Help from Capa Wordpress Adminpages
 		return preg_replace($search_string, '', $params);
 	}
-	
+
 	/**
 	 * Create an Array with term_id and term_taxonomy_id ( prevent mix up with term/taxonomy IDs )
 	 *
@@ -1014,71 +1014,63 @@ class Capa_Protect {
 
 			$valid_categories = $this->get_value_categories(TRUE);
 
-			$query	= '	SELECT p.ID, p.post_type, tr.object_id, tr.term_taxonomy_id 
+			$query	= '	SELECT p.ID, p.post_type, tr.object_id, tr.term_taxonomy_id
 						FROM '.$wpdb->posts.'  as p
 							LEFT JOIN '.$wpdb->term_relationships.' as tr ON tr.object_id = p.ID
 						WHERE p.post_type = "post" AND tr.term_taxonomy_id IN ('.implode(',',$valid_categories).')';
 
 			$res	= mysql_query($query) or die(mysql_error());
 
-			while ($row = mysql_fetch_assoc($res)){
-				$post_ids[] = $row['ID'];
-			}
+		while ( $row = mysql_fetch_assoc( $res ) ) {
+			$post_ids[] = $row['ID'];
+		}
 
-		if(is_array($post_ids)){
+		if ( is_array( $post_ids ) ) {
 			$return = ' IN ("'.implode(',',$post_ids).'")';
-		}elseif(is_numeric($post_id)){
+		}
+		elseif(is_numeric($post_id)){
 			$return = ' = '.$post_id;
-		}else{
+		}
+		else {
 			$return = ' = 0';
 		}
 
-		$return = ' WHERE comment_post_ID '.$return;
-
-		return $return;
+		return ' WHERE comment_post_ID ' . $return;
 	}
 
 /**
 	TESTAREA FOR NEW FUNCTION
 **/
-	function filter_get_com($param){
-		if($param && $this->post_should_be_hidden($param->comment_post_ID)){
-			return NULL;
+	function filter_get_com( $param ) {
+		if ( $param && $this->post_should_be_hidden( $param->comment_post_ID ) ) {
+			return null;
 		}
 		return $param;
 	}
 
+	function filter_manage( $param ) {}
 
-	function filter_manage($param){
-	}
+	function filter_role_has_cap( $params ) {}
 
-
-	function filter_role_has_cap($params){
-	}
-	
-
-	function filter_user_has_cap($params,$caps,$args){
+	function filter_user_has_cap( $params, $caps, $args ) {
 		return $params;
 	}
 
-
-	function _admin_the_post_parent($post){
+	function _admin_the_post_parent( $post ) {
 		$allow_pages = $this->get_valid_pages();
 
-		if(is_array($allow_pages)){
+		if ( is_array( $allow_pages ) ) {
 			// Filter disallowed Pages
-				if(!in_array($post->post_parent,$allow_pages)){
-					$post->post_parent = 0;
-				}
+			if ( ! in_array( $post->post_parent, $allow_pages ) )
+				$post->post_parent = 0;
 		}
-
 		return $post;
 	}
 
 	/**
 		TODO Check mit Rope Scoper
 	*/
-	
+
 	/**
 	 * Alternate diverse SQL Queries
 	 * @return string
@@ -1086,134 +1078,114 @@ class Capa_Protect {
 	function filter_wpdb_query( $param ) {
 		if ( $this->check_user() )
 			return $param;
-	
+
 		global $wpdb;
-	
+
 		// SQLFILTER::function _wp_get_comment_list
 		#	SELECT *
 		#	FROM $wpdb->comments c
-		#	LEFT JOIN $wpdb->posts p ON c.comment_post_ID = p.ID 
+		#	LEFT JOIN $wpdb->posts p ON c.comment_post_ID = p.ID
 		#	WHERE p.post_status != 'trash'
-		if(strpos($param," FROM $wpdb->comments c LEFT JOIN $wpdb->posts p ON c.comment_post_ID = p.ID") !== FALSE){
-			if(strpos($param,'WHERE') !== FALSE && strpos(substr($param, strpos($param,'WHERE')),'comment_post_ID') === FALSE){
-				// In Case Public/Allowed Comments are hidden 
-				if($this->options->capa_protect_comment_policy == 'hide'){
+		if ( false !== strpos( $param, " FROM $wpdb->comments c LEFT JOIN $wpdb->posts p ON c.comment_post_ID = p.ID" ) ) {
+			if ( false !== strpos( $param, 'WHERE' ) && false === strpos( substr( $param, strpos( $param, 'WHERE' ) ), 'comment_post_ID' ) ) {
+				// In Case Public/Allowed Comments are hidden
+				if ( 'hide' == $this->options->capa_protect_comment_policy ) {
 					$allow_posts = ' comment_post_ID IN (0) AND';
 				}
-				else{
-					$allow_posts = $this->filter_posts();
-					$allow_posts = str_replace('AND ID',' comment_post_ID',$allow_posts)." AND";
+				else {
+					$allow_posts = str_replace( 'AND ID',' comment_post_ID', $this->filter_posts() ) . ' AND';
 				}
-				$param = str_replace('WHERE', 'WHERE'.$allow_posts, $param);
+				$param = str_replace( 'WHERE', 'WHERE' . $allow_posts, $param );
 			}
 		}
 
 		// SQLFILTER::function wp_count_comments
 		#	SELECT comment_approved, COUNT( * ) AS num_comments
-		#	FROM sm_blog_comments 
-		#	GROUP BY comment_approved 
-		if(strpos($param,'SELECT comment_approved, COUNT') !== FALSE && strpos($param,'WHERE') === FALSE){
-			if($this->options->capa_protect_comment_policy == 'hide'){
+		#	FROM sm_blog_comments
+		#	GROUP BY comment_approved
+		if ( false !== strpos( $param, 'SELECT comment_approved, COUNT' ) && false === strpos( $param, 'WHERE' ) ) {
+			if ( $this->options->capa_protect_comment_policy == 'hide' ) {
 				$allow_posts = ' WHERE comment_post_ID IN (0) ';
-			}else{
-				$allow_posts = $this->filter_posts();
-				$allow_posts = str_replace('AND ID',' WHERE comment_post_ID',$allow_posts)." ";
 			}
-
-			$param = str_replace('FROM '.$wpdb->comments, 'FROM '.$wpdb->comments.' '.$allow_posts, $param);
+			else {
+				$allow_posts = str_replace( 'AND ID', ' WHERE comment_post_ID', $this->filter_posts() ) . ' ';
+			}
+			$param = str_replace( 'FROM ' . $wpdb->comments, 'FROM ' . $wpdb->comments . ' ' . $allow_posts, $param );
 		}
 
 		// SQLFILTER::function wp_get_recent_posts
-		#	SELECT * 
-		#	FROM $wpdb->posts 
+		#	SELECT *
+		#	FROM $wpdb->posts
 		#	WHERE post_type = 'post' AND post_status IN ( 'draft', 'publish', 'future', 'pending', 'private' ) ORDER BY post_date DESC $limit
-		if(strpos($param,"SELECT * FROM $wpdb->posts WHERE post_type = 'post' AND post_status IN ( 'draft', 'publish', 'future', 'pending', 'private' ) ORDER BY post_date DESC") !== FALSE){
-			$recent_posts	= substr($param, (strpos($param,'LIMIT '))+6);
-			$allow_posts	= $this->filter_posts();
-
-			$param = str_replace('AND post_status', $allow_posts.' AND post_status',$param);
-
-			return $param;
+		if ( false !== strpos( $param, "SELECT * FROM $wpdb->posts WHERE post_type = 'post' AND post_status IN ( 'draft', 'publish', 'future', 'pending', 'private' ) ORDER BY post_date DESC" ) ) {
+			$recent_posts = substr( $param, ( strpos( $param, 'LIMIT ' ) ) + 6 );
+			$allow_posts  = $this->filter_posts();
+			return str_replace( 'AND post_status', $allow_posts . ' AND post_status', $param );
 		}
-
 
 		// SQLFILTER::function wp_count_attachments
-		if(strpos($param,'SELECT post_mime_type, COUNT( * ) AS num_posts') !== FALSE){
-			if( ! $this->options->capa_protect_show_only_allowed_attachments )
+		if ( false !== strpos( $param, 'SELECT post_mime_type, COUNT( * ) AS num_posts' ) ) {
+			if ( ! $this->options->capa_protect_show_only_allowed_attachments )
 				return $param;
-
-			$allow_posts = $this->filter_posts();
-			$allow_posts = str_replace('AND ID',' AND post_parent', $allow_posts);
-
-			$param = str_replace('AND post_status', $allow_posts.' AND post_status',$param);
-
-			return $param;
+			$allow_posts = str_replace( 'AND ID', ' AND post_parent', $this->filter_posts() );
+			return str_replace( 'AND post_status', $allow_posts . ' AND post_status', $param );
 		}
 
-
 		// SQLFILTER::function get_available_post_mime_types
-		if(strpos($param, "SELECT DISTINCT post_mime_type FROM $wpdb->posts WHERE post_type = 'attachment'") !== FALSE){
-			if( ! $this->options = capa_protect_show_only_allowed_attachments )
+		if ( false !== strpos( $param, "SELECT DISTINCT post_mime_type FROM $wpdb->posts WHERE post_type = 'attachment'" ) ) {
+			if ( ! $this->options = capa_protect_show_only_allowed_attachments )
 				return $param;
-
-			$allow_posts = $this->filter_posts();
-			$allow_posts = str_replace(' AND ID',' AND post_parent', $allow_posts);
-
-			$param = $param.$allow_posts;
-
-			return $param;
+			return $param . str_replace( ' AND ID', ' AND post_parent', $this->filter_posts() );
 		}
 
 		// SQLFILTER::function wp_count_posts
-		if(strpos($param,'SELECT post_status, COUNT(') !== FALSE){
-			$allow_posts = $this->filter_posts();
-			$allow_posts = str_replace('AND ID',' ID', $allow_posts);
-							($allow_posts != '') ? $allow_posts = $allow_posts.' AND ' : NULL;
+		if ( false !== strpos( $param, 'SELECT post_status, COUNT(' ) ) {
+			$allow_posts = str_replace( 'AND ID', ' ID', $this->filter_posts() );
+			if ( $allow_posts != '')
+				$allow_posts = $allow_posts . ' AND ';
 
-			if(strpos($param,'WHERE') !== FALSE && strpos($param,'ID') === FALSE){
-				$param = str_replace('WHERE', 'WHERE'.$allow_posts,$param);
+			if ( false !== strpos( $param, 'WHERE' ) && false === strpos( $param, 'ID' ) ) {
+				$param = str_replace( 'WHERE', 'WHERE' . $allow_posts, $param );
 			}
-
 			return $param;
 		}
 
-
 		// SQLFILTER::function &get_terms ( case of count )
-		#	SELECT COUNT(*) FROM $wpdb->terms AS t 
-		#	INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id 
+		#	SELECT COUNT(*) FROM $wpdb->terms AS t
+		#	INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id
 		#	WHERE tt.taxonomy IN (string) AND tt.term_taxonomy_id IN (int)
 		//	DEV
-		if(!isset($GLOBALS['wp_filter']['list_terms_exclusions']) && strpos($param, "SELECT COUNT(*) FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE") !== FALSE){
-			switch($param){
-				case ( strpos($param,'category') !== FALSE):
-					if(strpos($param,'term_taxonomy_id') === FALSE){
-						$disallow_cat = $this->get_value_categories(FALSE);
-						$param .= ' AND term_taxonomy_id NOT IN ('.implode(',',$disallow_cat).')';
-					}else{
-						$disallow_cat = $this->get_value_categories(TRUE);
-						$param = str_replace('WHERE','WHERE tt.term_taxonomy_id IN ('.implode(',',$disallow_cat).') AND', $param);
+		if ( ! isset( $GLOBALS['wp_filter']['list_terms_exclusions'] ) && false !== strpos( $param, "SELECT COUNT(*) FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE" ) ) {
+			switch ( $param ) {
+				case ( false !== strpos( $param, 'category' ) ):
+					if ( false === strpos( $param, 'term_taxonomy_id' ) ) {
+						$disallow_cat = $this->get_value_categories( false );
+						$param       .= ' AND term_taxonomy_id NOT IN (' . implode( ',', $disallow_cat ) .')';
 					}
-				break;
-
-				case ( strpos($param,'post_tag') !== FALSE):
-					if(strpos($param,'term_taxonomy_id') === FALSE){
-						$allow_tags	= $this->get_value_tags();
-						$param .= ' AND term_taxonomy_id IN ('.implode(',',$allow_tags).') ';
-					}else{
-						$allow_tags	= $this->get_value_tags();
-						$param	= str_replace('WHERE','WHERE t.term_id IN ('.implode(',',$allow_tags).') AND', $param);
+					else {
+						$disallow_cat = $this->get_value_categories( true );
+						$param        = str_replace( 'WHERE','WHERE tt.term_taxonomy_id IN (' . implode( ',', $disallow_cat ) . ') AND', $param );
 					}
-				break;
+					break;
+				case ( false !== strpos( $param, 'post_tag' ) ):
+					if ( false === strpos( $param, 'term_taxonomy_id' ) ) {
+						$allow_tags	= $this->get_value_tags();
+						$param     .= ' AND term_taxonomy_id IN (' . implode( ',', $allow_tags ) . ') ';
+					}
+					else {
+						$allow_tags	= $this->get_value_tags();
+						$param	    = str_replace( 'WHERE', 'WHERE t.term_id IN (' . implode( ',', $allow_tags ) .') AND', $param );
+					}
+					break;
 			}
-
 			return $param;
 		}
 
 		// SQLFILTER::function get_var ( case of unattached file count )
-		#	SELECT COUNT( * ) FROM $wpdb->posts 
+		#	SELECT COUNT( * ) FROM $wpdb->posts
 		#	WHERE post_type = 'attachment' AND post_status != 'trash' AND post_parent < 1
 		//	DEV
-		if(strpos($param, "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' AND post_parent < 1") !== FALSE){
+		if ( strpos( $param, "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' AND post_parent < 1" ) !== false ) {
 			if ( ! $this->options->capa_protect_show_unattached_files ) {
 				$param .= ' AND post_parent NOT IN (0)';
 			}
@@ -1230,7 +1202,7 @@ function capa_plugin_init() {
 	load_plugin_textdomain(
 		'capa',
 		false,
-		dirname( plugin_basename(__FILE__) ) . '/lang/'
+		dirname( plugin_basename( __FILE__ ) ) . '/lang/'
 	);
 	capa_protect::getInstance();
 }
