@@ -13,14 +13,19 @@ require_once 'capa-user-edit.php';
 
 class Capa_Protect {
 
-	protected $options, $user;
-
-	private function __clone() {}
-	private function __wakeup() {}
+	protected
+		$options,
+		$user;
 
 	private function __construct() {
 		$this->options = Capa_Protect_Options_Handler::getInstance();
 		$this->user    = wp_get_current_user();
+	}
+
+	private function __clone() {
+	}
+
+	private function __wakeup() {
 	}
 
 	/**
@@ -35,23 +40,28 @@ class Capa_Protect {
 			add_filter( 'query',					array( $instance, 'filter_wpdb_query' ), 10);
 
 			add_filter( 'wp_get_object_terms',		array( $instance, 'filter_object_item' ), 10, 3 );
+
 			add_filter( 'wp_list_pages_excludes',	array( $instance, 'filter_page_list_item' ), 10 );
+
 			add_filter( 'wp_list_categories',		array( $instance, 'filter_category_list_item' ), 10 );
 
 			//---- FRONTEND & BACKEND ----//
 
 			// BACKEND
 			add_filter( 'contextual_help',			array( $instance, 'cleanup_capa_help' ), 10 );
+
 			add_filter( 'get_pages',				array( $instance, 'filter_pages' ), 10 );
 
 			if ( is_admin() ) {
-				add_filter('list_terms_exclusions',	array( $instance, 'sql_terms_exclusions' ), 10 );
+				add_filter( 'list_terms_exclusions',	array( $instance, 'sql_terms_exclusions' ), 10 );
 			}
 
 			// FRONTEND & BACKEND
 			add_filter( 'get_term',					array( $instance, 'filter_terms' ), 10, 2 );
 			add_filter( 'get_terms',				array( $instance, 'filter_terms' ), 10 );
+
 			add_filter( 'posts_where',				array( $instance, 'filter_posts' ), 10 );
+
 			add_filter( 'wp_get_nav_menu_items',	array( $instance, 'filter_menu_list_item' ), 10 );
 
 			//---- POST FILTERS ----//
@@ -73,8 +83,8 @@ class Capa_Protect {
 			add_filter( 'get_comment_author',		array( $instance, 'filter_comment_author' ), 10 );
 			add_filter( 'get_comment_author_link',	array( $instance, 'filter_comment_author' ), 10 );
 
-			add_filter( 'comment_text',				array( $instance, 'filter_comment_body' ), 10 );
-			add_filter( 'get_comment_excerpt',		array( $instance, 'filter_comment_body' ), 10 );
+			add_filter( 'comment_text',				array( $instance, 'filter_comment_body' ), 10, 3 );
+			add_filter( 'get_comment_excerpt',		array( $instance, 'filter_comment_body' ), 10, 3 );
 		}
 		return $instance;
 	}
@@ -282,7 +292,6 @@ class Capa_Protect {
 	 * @param array object $user
 	 * @param string $kind Select between 'pag' / 'cat'
 	 * @param string $parent_id
-	 *
 	 * @return bool
 	 */
 	public function user_can_access( $val_id, $kind, $parent_id = '' ) {
@@ -294,425 +303,341 @@ class Capa_Protect {
 		switch ( $kind ) {
 			case 'pag':
 			case 'page':
-				if ( $this->user->id == 0 ) {
-					$user_access_page_check = $this->options->capa_protect_pag_anonymous;
-				}
-				else{
-					$user_access_page_check = get_option( "capa_protect_pag_user_{$this->user->id}" );
-				}
-				if (empty($user_access_page_check)){
+				$user_access_page_check = (
+					0 == $this->user->id ?
+					$this->options->capa_protect_pag_anonymous :
+					$user_access_page_check = get_option( "capa_protect_pag_user_{$this->user->id}" )
+				);
+				// User Settings
+				if ( empty( $user_access_page_check ) ) {
 					// Group Settings
 					$tmp_caps = implode( '', array_keys( $user->caps ) );
 					$user_access_page_check = get_option( "capa_protect_pag_role_{$tmp_caps}" );
 				}
-
 				// Default Setting
 				if ( empty( $user_access_page_check ) ) {
 					$user_access_page_check	= $this->options->capa_protect_pag_default;
 				}
-
-				if ( isset( $user_access_page_check[$val_id] ) ) {
-					return true;
+				return( isset( $user_access_page_check[$val_id] ) );
+				break;
+			case 'cat':
+			case 'category':
+				// parent id check for attachment
+				if ( is_attachment() ) {
+					$access_post = wp_get_post_cats( 1, $parent_id );
+					$val_id      = $access_post[0];
 				}
-				else {
-					return false;
-				}
-
-				$user_access_pag_check = "";
-				break 1;
-
-		case 'cat':
-		case 'category':
-
-		// parent id check for attachment
-			if( is_attachment() ){
-				$access_post	= wp_get_post_cats(1,$parent_id);
-				$val_id			= $access_post[0];
-			}
-
-			if($this->user->id == 0){
-				$user_access_category_check	= $this->options->capa_protect_cat_anonymous;
-			}else{
-				$user_access_category_check = get_option("capa_protect_cat_user_{$this->user->id}");
-			}
-
-		// User Settings
-				if (empty($user_access_category_check)){
+				$user_access_category_check	= (
+					0 == $this->user->id ?
+					$this->options->capa_protect_cat_anonymous :
+					get_option( "capa_protect_cat_user_{$this->user->id}" )
+				);
+				// User Settings
+				if ( empty( $user_access_category_check ) ) {
 					// Group Settings
-						$tmp_caps = implode('',array_keys($this->user->caps));
-						$user_access_category_check = get_option("capa_protect_cat_role_{$tmp_caps}");
+					$tmp_caps = implode( '', array_keys( $this->user->caps ) );
+					$user_access_category_check = get_option( "capa_protect_cat_role_{$tmp_caps}" );
 				}
-
 				// Default Setting
-					if(empty($user_access_category_check)){
-						$user_access_category_check = $this->option->capa_protect_cat_default;
-					}
-
-			$return = FALSE;
-
-			if($user_access_category_check !== FALSE){
-				if(is_array($val_id)){
-					foreach($val_id as $key=>$id){
-						if(array_key_exists($id,$user_access_category_check)){
-							$return = TRUE;
+				if ( empty( $user_access_category_check ) ) {
+					$user_access_category_check = $this->option->capa_protect_cat_default;
+				}
+				$return = false;
+				if ( false !== $user_access_category_check ) {
+					if ( is_array( $val_id ) ) {
+						foreach ( $val_id as $key => $id ) {
+							if ( array_key_exists( $id, $user_access_category_check ) )
+								$return = true;
 						}
 					}
-				}else{
-					if(array_key_exists($val_id,$user_access_category_check)){
-						$return = TRUE;
+					else {
+						if ( array_key_exists( $val_id, $user_access_category_check ) )
+							$return = true;
 					}
 				}
-			}
-
-			return $return;
-
-			$user_access_category_check = "";
-			break 1;
-		}
-
-	}
-
-
-	/**
-	 * Gets the 'private' message string
-	 * @return string
-	 */
-	function get_private_message() {
-		global $post;
-
-		return(
-			$this->options->capa_protect_private_message ?
-			$this->options->capa_protect_private_message :
-			$capa_protect_options->capa_protect_default_private_message
-		);
-	}
-
-	/**
-	 * Gets users capa settings
-	 * @param array object $current_user
-	 * @return array
-	 */
-	function get_capa_protect_for_user() {
-		if ( $this->check_user() )
-			return true;
-
-		$user_id = ( $this->user ) ? $this->user->id : 0;
-		if ( 0 == user_id ) {
-			return $this->options->capa_protect_cat_anonymous;
-		}
-
-		$visible = get_option( "capa_protect_cat_user_{$user_id}" );
-		if ( empty( $visible ) ) {
-			$visible = get_option( 'capa_protect_cat_role_' . implode( '', $current_user->roles ) );
-			if( empty( $visible ) ) {
-				$visible = $this->option->capa_protect_cat_default;
+				return $return;
+				break;
 			}
 		}
-		return $visible;
-	}
 
-
-	/**
-	 * Sets users capa settings
-	 * @param string $user_id
-	 * @param array $value
-	 * @param string $kind
-	 *
-	 * @return none
-	 */
-	function set_access_for_user($user_id, $value, $kind) {
-
-		switch($kind) {
-			case "cat":
-				if ($value){
-					update_option("capa_protect_cat_user_${user_id}", $value);
-				}else{
-					update_option("capa_protect_cat_user_${user_id}", '0');
-				}
-			break;
-
-			case "pag":
-				if ($value){
-					update_option("capa_protect_pag_user_${user_id}", $value);
-				}else{
-					update_option("capa_protect_pag_user_${user_id}", '0');
-				}
-			break;
+		/**
+		 * Gets the 'private' message string
+		 * @return string
+		 */
+		function get_private_message() {
+			return(
+				$this->options->capa_protect_private_message ?
+				$this->options->capa_protect_private_message :
+				$this->options->capa_protect_default_private_message
+			);
 		}
 
-	}
+		/**
+		 * Gets users capa settings
+		 * @param array object $current_user
+		 * @return array
+		 */
+		function get_capa_protect_for_user() {
+			if ( $this->check_user() )
+				return true;
+	
+			if ( 0 == $this->user->id )
+				return $this->options->capa_protect_cat_anonymous;
 
-	/**
-	 * Add SQL Addition to show only posts
-	 * @param string $sql
-	 * @return string SQL Addiction
-	 */
-	function filter_posts( $sql = false ) {
-		if ( strpos( $sql,'attachment' ) && ! $this->options->capa_protect_show_only_allowed_attachments && ! $this->options->capa_protect_show_unattached_files )
-			return $sql;
+			$visible = get_option( "capa_protect_cat_user_{$this->user->id}" );
+			if ( empty( $visible ) ) {
+				$visible = get_option( 'capa_protect_cat_role_' . implode( '', $current_user->roles ) );
+				if ( empty( $visible ) )
+					$visible = $this->option->capa_protect_cat_default;
+			}
+			return $visible;
+		}
 
-		if ( $this->check_user() )
-			return $sql;
+		/**
+		 * Sets users capa settings
+		 * @param string $user_id
+		 * @param array $value
+		 * @param string $kind
+		 * @return none
+		 */
+		function set_access_for_user( $user_id, $value, $kind ) {
+			if ( in_array( $kind, array( 'cat', 'pag' ) ) ) {
+				$option = "capa_protect_{$kind}_user_{$user_id}";
+				if ( $value )
+					update_option( $option, $value );
+				else
+					delete_option( $option );
+			}
+		}
 
-		// Is Feed or User/Visitor got the right to see the titel / message
-		if (
-			( is_feed() && $this->options->capa_protect_post_policy != 'hide' && $this->options->capa_protect_post_policy ) ||
-			( $this->options->capa_protect_post_policy == 'show title' || $this->options->capa_protect_post_policy == 'show message' )
-		) {
-		// Only Frontend, Backend(wp-admin) no visual change
-			if(!strpos($_SERVER['REQUEST_URI'], '/wp-admin/')){
+		/**
+		 * Add SQL Addition to show only posts
+		 * @param string $sql
+		 * @return string SQL Addiction
+		 */
+		function filter_posts( $sql = false ) {
+			if (
+				! $this->options->capa_protect_show_only_allowed_attachments &&
+				! $this->options->capa_protect_show_unattached_files &&
+				strpos( $sql,'attachment' )
+			)
 				return $sql;
-			}
-		}
-
-		global $wpdb;
-
-		$inclusive		= $this->get_value_categories(TRUE);
-		$inclusive_page	= $this->get_valid_pages();
-
-		if ( sizeof( $inclusive) <= 0 )
-			$inclusive = array(0);
-
-		$query =
-			" SELECT ID FROM $wpdb->posts INNER JOIN" .
-			" $wpdb->term_relationships ON ( $wpdb->posts.ID = $wpdb->term_relationships.object_id )" .
-			" WHERE 0 = 1".
-			" OR $wpdb->term_relationships.term_taxonomy_id in ( ".implode(',',$inclusive)." ) AND $wpdb->posts.post_type NOT IN ('revision','page')";
-
-		$res = mysql_query($query) or die(mysql_error());
-
-		$ids = array();
-		while ($row = mysql_fetch_assoc($res)){
-			$ids[] = "'" . $row['ID'] . "'";
-		}
-
-	# Array Post Check ~ Include already the ID of Pages?
-		if(is_array($inclusive_page) && sizeof($inclusive_page) > 0){
-			$tmp_count = count($inclusive_page)-1;
-
-			for($i=0;$i<=$tmp_count;$i++){
-				$tmp_var = "'".$inclusive_page[$i]."'";
-				if(array_search($tmp_var,$ids) != 1){
-					array_push($ids,"'".$inclusive_page[$i]."'");
+	
+			if ( $this->check_user() )
+				return $sql;
+	
+			// Is Feed or User/Visitor got the right to see the titel / message
+			if (
+				( is_feed() && $this->options->capa_protect_post_policy && 'hide' != $this->options->capa_protect_post_policy ) ||
+				( in_array( $this->options->capa_protect_post_policy, array( 'show title', 'show message' ) ) )
+			) {
+				// Only Frontend, Backend(wp-admin) no visual change
+				if ( ! strpos( $_SERVER['REQUEST_URI'], '/wp-admin/' ) ) {
+					return $sql;
 				}
 			}
-		}
 
-	// In case sql is for the attachments
-		$fld_id = (strpos($sql, "post_type = 'attachment'")) ? 'post_parent' : 'ID';
+			$inclusive_page	= (array) $this->get_valid_pages();
 
-		if(sizeof($ids) > 0){
-			$sql .= " AND ".$fld_id." IN (".implode(",",$ids).( ($this->options->capa_protect_show_only_allowed_attachments && $this->options->capa_protect_show_unattached_files) ? ', 0' : ', -1' ).")";
-		}else{
-			$sql .= " AND ".$fld_id." IN ('".(($this->options->capa_protect_show_unattached_files) ? "0" : "-1")."')";
-		}
+			$inclusive = $this->get_value_categories( true );
+			if ( 0 == count( $inclusive ) )
+				$inclusive = array( 0 );
 
-		return $sql;
-	}
+			global $wpdb;
+			$ids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->posts} p INNER JOIN {$wpdb->term_relationships} t ON ( p.ID = t.object_id ) WHERE t.term_taxonomy_id in ( %s ) AND p.post_type NOT IN ( 'revision', 'page' )",
+					implode( ',', $inclusive )
+				)
+			);
 
-
-	/**
-	 * To show or not to show the post title
-	 * @param string $param
-	 * @return string
-	 */
-	function filter_post_title($param,$post=FALSE){
-
-		if(!$post){
-			global $post;
-				if(is_null($post)){
-					return $param;
-				}
-		}else{
-			$post = (object) array('ID'=>$post);
-		}
-
-		if ( $this->check_user() )
-			return $param;
-
-		if($this->post_should_be_hidden($post->ID)){
-			if($this->options->capa_protect_post_policy !== FALSE && $this->options->capa_protect_post_policy != 'hide'){
-				return $param;
-			}else{
-				return __('No Title','capa');
-			}
-		}else{
-			return $param;
-		}
-
-	}
-
-	/**
-	 * To show or not to show the post content
-	 * @param string $text
-	 * @return string
-	 */
-	function filter_content( $text ){
-		global $post;
-
-		if (
-			false !== $this->options->capa_protect_post_policy &&
-			'show title' == $this->options->capa_protect_post_policy &&
-			$this->post_should_be_hidden( $post->ID )
-		) {
-			$text = $this->get_private_message();
-		}
-		return $text;
-	}
-
-	/**
-	 * To show or not to show the post comment
-	 * @param string $text
-	 * @return string
-	 */
-	function filter_comment( $params, $postID = false, $return = 0 ) {
-		if ( $this->check_user() )
-			return $params;
-
-		$return	 = ( is_array( $params ) ) ? array() : $return;
-		$post_id = ( is_numeric( $postID ) ) ? $postID : ( ( isset( $params->comment_post_ID ) && is_numeric( $params->comment_post_ID ) ) ? $params->comment_post_ID : false );
-
-		if ( ! $post_id ) {
-			global $post;
-			$post_id = (is_null($post)) ? 0 : $post->ID;
-		}
-
-		if ( $this->options->capa_protect_comment_policy == 'hide' && ! $this->options->capa_protect_show_comment_on_private_posts )
-			return $return;
-
-		// params ist ein array, einzelne comment abfrage
-		// hoere Performens abfrage?
-		// SQL Query und Cache kontrollieren
-
-		// Post ID exists?
-		if ( (int) $postID > 0){
-			if ( $this->post_should_be_hidden( $post_id ) ) {
-				if ( is_numeric( $this->options->capa_protect_show_comment_on_private_posts ) ) {
-					if ( 'hide' != $this->options->capa_protect_comment_policy )
-						return $params;
-				}
+			$ids = array_unique( array_merge( $ids, $inclusive_page ) );
+			if ( 0 < count( $ids ) ) {
+				$ids[] = ( 
+					$this->options->capa_protect_show_only_allowed_attachments && $this->options->capa_protect_show_unattached_files ?
+					'0' :
+					'-1'
+				);
 			}
 			else {
-				if ( $this->options->capa_protect_comment_policy != 'hide' && $this->options->capa_protect_comment_policy !== FALSE){
+				$ids[] = (
+					$this->options->capa_protect_show_unattached_files ?
+					'0' :
+					'-1'
+				);
+			}
+
+			// In case sql is for the attachments
+			$fld_id = ( strpos( $sql, "post_type = 'attachment'" ) ) ? 'post_parent' : 'ID';
+			return $sql . $wpdb->prepare( " AND {$fld_id} IN ( %s )", implode( ', ', $ids ) );
+		}
+
+		/**
+		 * To show or not to show the post title
+		 * @param string $param
+		 * @return string
+		 */
+		function filter_post_title( $param, $post_id ) {
+			if ( $this->check_user() )
+				return $param;
+
+			if (
+				false !== $this->options->capa_protect_post_policy &&
+				'hide' != $this->options->capa_protect_post_policy &&
+				$this->post_should_be_hidden( $post_id )
+			) {
+				return $param;
+			}
+			return __( 'No Title', 'capa' );
+		}
+
+		/**
+		 * To show or not to show the post content
+		 * @param string $text
+		 * @return string
+		 */
+		function filter_content( $text ) {
+			global $post;
+			if (
+				false !== $this->options->capa_protect_post_policy &&
+				'show title' == $this->options->capa_protect_post_policy &&
+				$this->post_should_be_hidden( $post->ID )
+			) {
+				$text = $this->get_private_message();
+			}
+			return $text;
+		}
+
+		/**
+		 * To show or not to show the post comment
+		 * @param string $text
+		 * @return string
+		 */
+		function filter_comment( $params, $post_id = false, $return = 0 ) {
+			if ( $this->check_user() )
+				return $params;
+	
+			$return	 = ( is_array( $params ) ) ? array() : $return;
+			if (
+				'hide' == $this->options->capa_protect_comment_policy &&
+				! $this->options->capa_protect_show_comment_on_private_posts
+			) {
+				return $return;
+			}
+				
+			if (
+				! is_numeric( $post_id ) &&
+				isset( $params->comment_post_ID ) &&
+				is_numeric( $params->comment_post_ID )
+			) {
+				$post_id = $params->comment_post_ID;
+			}
+	
+			if ( ! $post_id ) {
+				global $post;
+				$post_id = ( is_null( $post ) ) ? 0 : $post->ID;
+			}
+	
+			if ( $post_id > 0 ) {
+				if ( $this->post_should_be_hidden( $post_id ) ) {
+					if (
+						is_numeric( $this->options->capa_protect_show_comment_on_private_posts ) &&
+						'hide' != $this->options->capa_protect_comment_policy
+					) {
+						return $params;
+					}
+				}
+				if (
+					'hide'  != $this->options->capa_protect_comment_policy &&
+					false !== $this->options->capa_protect_comment_policy
+				) {
 					return $params;
 				}
+				return $return;
 			}
-			return $return;
-		}
-		else{
 
-			if(is_array($params)){
-				$_posts = FALSE;
+			if ( is_array( $params ) ) {
+				$_posts = array();
 
-				foreach($params as $obj){
+				foreach ( $params as $obj ) {
 					$_posts[] = $obj->comment_post_ID;
 					$_comments[$obj->comment_post_ID][] = $obj;
 				}
 
 				$params = array();
-
-				if(is_array($_posts)){
-					foreach($_posts as $obj){
-						if(!$this->post_should_be_hidden($obj)){
-							$params = $params + $_comments[$obj];
-						}
+				foreach ( $_posts as $obj ) {
+					if ( ! $this->post_should_be_hidden( $obj ) ) {
+						$params[] = $_comments[$obj];
 					}
 				}
 			}
-
-		}
-
-		return $params;
-	}
-
-	/**
-	 * To show or not to show the comment body(content)
-	 * @param string $param
-	 * @return string
-	 */
-	function filter_comment_body( $param ) {
-		global $post;
-
-		// Hm, POst oder Comment
-		// wird post hier gebraucht?
-		if(!$post){
-			global $comment;
-			$ID = $comment->ID;
-		}else{
-			$ID = $post->ID;
-		}
-
-		if ( $this->check_user() )
-			return $param;
-
-		if ( $this->post_should_be_hidden( $ID ) ) {
-			if ( is_numeric( $this->options->capa_protect_show_comment_on_private_posts ) ) {
-				if($thia->options->capa_protect_comment_policy == 'show message' or $this->options->capa_protect_comment_policy == 'all'){
-					return $param;
-				}else{
-					return $this->get_private_message();
-				}
-			}else{
-				return $this->get_private_message();
-			}
-		}else{
-			if($this->options->capa_protect_comment_policy == 'show message' or $this->options->capa_protect_comment_policy == 'all'){
-				return $param;
-			}else{
-				return $this->get_private_message();
-			}
-		}
-	}
-
-
-	/**
-	 * To show or not to show the comment author
-	 * @param string $param
-	 * @return string
-	 */
-	function filter_comment_author( $param ) {
-		global $post;
-
-		if ( $this->check_user() )
-			return $param;
-
-		if ( $post && $this->post_should_be_hidden( $post->ID ) ) {
-			if ( is_numeric( $this->options->capa_protect_show_comment_on_private_posts ) ) {
-				if ( $this->options->capa_protect_comment_policy == 'show name' or $this->options->capa_protect_comment_policy == 'all'){
-					return $param;
-				}
-			}
-		}
-		else{
-			if($this->options->capa_protect_comment_policy == 'show name' or $this->options->capa_protect_comment_policy == 'all'){
-				return $param;
-			}
-		}
-
-		return $this->options->capa_protect_default_comment_author;
-		/**
-			TODO Editor Comment auch unsichtbar machen?
-		*/
-	}
-
-
-	/**
-	 * To show or not to show the page
-	 * @param array $param
-	 * @return array
-	 */
-	function filter_pages( $params ) {
-		$params = (array) $params;
-		if ( $this->options->capa_protect_show_private_pages )
 			return $params;
-
-		foreach ( $params as $id => $page ) {
-			if( $this->post_should_be_hidden( $page->ID ) )
-				unset( $params[$id] );
 		}
-		return $params;
-	}
 
+		/**
+		 * To show or not to show the comment body(content)
+		 * @param string $param
+		 * @return string
+		 */
+		function filter_comment_body( $param, $comment, $args ) {
+			if ( $this->check_user() )
+				return $param;
+	
+			if (
+				$this->post_should_be_hidden( $comment->ID ) &&
+				is_numeric( $this->options->capa_protect_show_comment_on_private_posts ) &&
+				in_array( $this->options->capa_protect_comment_policy, array( 'show message', 'all' ) )
+			) {
+				return $param;
+			}
+			return(
+				in_array( $this->options->capa_protect_comment_policy, array( 'show message', 'all' ) ) ?
+				$param :
+				$this->get_private_message()
+			);
+		}
+
+		/**
+		 * To show or not to show the comment author
+		 * @todo Editor Comment auch unsichtbar machen?
+		 * @param string $param
+		 * @return string
+		 */
+		function filter_comment_author( $param ) {
+			if ( $this->check_user() )
+				return $param;
+
+			global $post;
+			if (
+				$post && $this->post_should_be_hidden( $post->ID ) &&
+				is_numeric( $this->options->capa_protect_show_comment_on_private_posts ) &&
+				in_array( $this->options->capa_protect_comment_policy, array( 'show name', 'all' ) )
+			) {
+				return $param;
+			}
+			return(
+				in_array( $this->options->capa_protect_comment_policy, array( 'show message', 'all' ) ) ?
+				$param :
+				$this->options->capa_protect_default_comment_author
+			);
+		}
+
+		/**
+		 * To show or not to show the page
+		 * @param array $param
+		 * @return array
+		 */
+		function filter_pages( $params ) {
+			$params = (array) $params;
+			if ( $this->options->capa_protect_show_private_pages )
+				return $params;
+	
+			foreach ( $params as $id => $page ) {
+				if( $this->post_should_be_hidden( $page->ID ) )
+					unset( $params[$id] );
+			}
+			return $params;
+		}
 
 	/**
 	 * get the allows/disallow ( depends on modus ) categories
@@ -765,7 +690,6 @@ class Capa_Protect {
 		return	$inclusions;
 
 	}
-
 
 	/**
 	 * get the allows/disallow ( depends on modus ) tags
@@ -1004,17 +928,17 @@ class Capa_Protect {
 	 *
 	 * @return string
 	 */
-	function filter_comment_feed($param){
+	function filter_comment_feed( $param ) {
 		// In the Case comments are hidden
-		if($this->options->capa_protect_comment_policy == 'hide' || $this->options->capa_protect_comment_policy === false ){
+		if ( 'hide' == $this->options->capa_protect_comment_policy || false === $this->options->capa_protect_comment_policy ) {
 			return ' WHERE comment_post_ID IN (0)';
 		}
 
 		global $wpdb;
 
-			$valid_categories = $this->get_value_categories(TRUE);
+		$valid_categories = $this->get_value_categories( true );
 
-			$query	= '	SELECT p.ID, p.post_type, tr.object_id, tr.term_taxonomy_id
+		$query = '	SELECT p.ID, p.post_type, tr.object_id, tr.term_taxonomy_id
 						FROM '.$wpdb->posts.'  as p
 							LEFT JOIN '.$wpdb->term_relationships.' as tr ON tr.object_id = p.ID
 						WHERE p.post_type = "post" AND tr.term_taxonomy_id IN ('.implode(',',$valid_categories).')';
