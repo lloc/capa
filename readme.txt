@@ -1,23 +1,22 @@
-=== CaPa Protect ===
+=== CaPa Protect Reloaded ===
 Contributors: namja
-Donate link: http://www.smatern.de/
+Donate link: https://donate.greenpeace.org/hpp/pay.shtml
 Tags: restrict, restriction, category, categories, page, pages, protect, comments, security, Post, admin, plugin, posts, invisible, hide comments, comments private, hide comments from non-members, members, membership, sicherheit, begrenzung
-Requires at least: 2.7.1
-Tested up to: 3.2.1
-Stable tag: 0.5.8.2
+Requires at least: 3.0
+Tested up to: 3.7.1
+Stable tag: 0.1
 
 Protects Categories, Pages and Posts for specific users & anonymous visitor
 
 == Description ==
 
-CaPa provides Category & Pages protection on a roles &amp; user basis.
+CaPa Protect Reloaded provides protection for categories & pages on a roles & user basis.
 
 Posts in a protected Category or Pages will not be visible unless the user or role has privileges to see it.
 
+The plugin based on the work by [S. Matern](http://www.smatern.de/category/coding/capa/).
 
-For Information [CaPa Role & User Access](http://www.smatern.de/2009/03/09/teaser-capa-v054/ "CaPa Protect").
-Further Information coming soon…
-
+Would you like to [contribute to this plugin](https://github.com/lloc/capa).
 
 = Partial Feature List =
 * Customize access for specific Pages, Posts, Categories
