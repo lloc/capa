@@ -50,7 +50,7 @@ class Capa_Protect {
 			// BACKEND
 			add_filter( 'contextual_help',			array( $instance, 'cleanup_capa_help' ), 10 );
 
-			add_filter( 'get_pages',				array( $instance, 'filter_pages' ), 10 );
+			add_filter( 'get_pages',				array( $instance, 'filter_pages' ), 10, 2 );
 
 			if ( is_admin() ) {
 				add_filter( 'list_terms_exclusions',	array( $instance, 'sql_terms_exclusions' ), 10 );
@@ -119,24 +119,21 @@ class Capa_Protect {
 	function filter_menu_list_item( $params ) {
 		foreach ( $params as $item => $values ) {
 			if ( ! $this->user_can_access( $values->object_id, $values->object ) ) {
-				switch($values->object){
+				switch( $values->object ) {
 					case 'page':
-						if(!$this->options->capa_protect_show_private_pages){
-							unset($params[$item]);
+						if ( ! $this->options->capa_protect_show_private_pages ) {
+							unset( $params[$item] );
 						}
-					break;
-
+						break;
 					case 'category':
-						if(!$this->options->capa_protect_show_private_categories){
-							unset($params[$item]);
+						if ( ! $this->options->capa_protect_show_private_categories ) {
+							unset( $params[$item] );
 						}
-					break;
+						break;
 				}
 			}
 
 		}
-
-
 		return $params;
 	}
 
@@ -178,19 +175,18 @@ class Capa_Protect {
 	 * @return array
 	 */
 	function filter_page_list_item() {
+		if ( $this->check_user() )
+			return array();
 		// Show Private Pages
 		if ( $this->options->capa_protect_show_private_pages ) {
 			return array();
 		}
 
 		$current_role = implode( '', $this->user->roles );
-
-		if ( $this->check_user() )
-			return array();
-
 		if ( $this->user->id == 0 ) {
 			$user_access_page_check = $this->options->capa_protect_pag_anonymous;
-		}else{
+		}
+		else{
 			$user_access_page_check = get_option("capa_protect_pag_user_".$this->user->id);
 		}
 
@@ -627,8 +623,7 @@ class Capa_Protect {
 		 * @param array $param
 		 * @return array
 		 */
-		function filter_pages( $params ) {
-			$params = (array) $params;
+		function filter_pages( $params, $args ) {
 			if ( $this->options->capa_protect_show_private_pages )
 				return $params;
 
